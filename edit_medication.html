@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Medication - myMed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Entry Method Buttons */
+        .entry-methods {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .entry-method-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 0;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background-color: transparent;
+            flex: 1;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .entry-method-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #6c757d;
+        }
+        
+        .entry-method-btn.active {
+            border-color: var(--primary-color);
+            background-color: rgba(93, 92, 222, 0.1);
+        }
+        
+        .entry-method-btn.active i {
+            color: var(--primary-color);
+        }
+        
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.25);
+        }
+        
+        /* Time Slots */
+        .time-slot {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .time-slot input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .time-slot button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .add-time-btn {
+            color: var(--primary-color);
+        }
+        
+        .remove-time-btn {
+            color: #dc3545;
+        }
+        
+        /* Day Checkboxes */
+        .days-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .day-checkbox {
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .day-checkbox input {
+            margin-right: 5px;
+        }
+        
+        /* Dosage Input */
+        .dosage-input, .supply-input {
+            display: flex;
+        }
+        
+        .dosage-input input, .supply-input input {
+            flex: 2;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        .dosage-input select, .supply-input select {
+            flex: 1;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: none;
+        }
+        
+        /* Photo Preview */
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            .entry-method-btn {
+                border-color: #333;
+            }
+            
+            .form-control {
+                background-color: #333;
+                border-color: #444;
+                color: #e9ecef;
+            }
+            
+            .form-control:focus {
+                box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.4);
+            }
+        }
+        
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .toast {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .toast.toast-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dark-mode .toast {
+            background-color: #333;
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .toast.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .toast-icon {
+            margin-right: 12px;
+        }
+        
+        .toast.success .toast-icon {
+            color: var(--success-color);
+        }
+        
+        .toast.error .toast-icon {
+            color: var(--error-color);
+        }
+        
+        .toast.info .toast-icon {
+            color: var(--primary-color);
+        }
+        
+        .toast.warning .toast-icon {
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-header with-back-button">
+            <button onclick="window.history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Edit Medication</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form id="medication-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Medication Name*</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dosage-amount" class="form-label">Dosage*</label>
+                        <div class="dosage-input">
+                            <input type="number" id="dosage-amount" class="form-control" step="0.1" min="0.1" required>
+                            <select id="dosage-unit" class="form-control">
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="g">g</option>
+                                <option value="ml">ml</option>
+                                <option value="tablet">tablet(s)</option>
+                                <option value="capsule">capsule(s)</option>
+                                <option value="pill">pill(s)</option>
+                                <option value="drop">drop(s)</option>
+                                <option value="spray">spray(s)</option>
+                                <option value="unit">unit(s)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="frequency" class="form-label">Frequency*</label>
+                        <select id="frequency" class="form-control" required>
+                            <option value="once-daily">Once daily</option>
+                            <option value="twice-daily">Twice daily</option>
+                            <option value="three-daily">Three times daily</option>
+                            <option value="four-daily">Four times daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="as-needed">As needed (PRN)</option>
+                            <option value="custom">Custom schedule</option>
+                        </select>
+                    </div>
+                    
+                    <div id="time-slots-container" class="form-group">
+                        <label class="form-label">Time(s)*</label>
+                        <!-- Time slots will be added here dynamically -->
+                    </div>
+                    
+                    <div id="days-container" class="form-group" style="display: none;">
+                        <label class="form-label">Days of Week</label>
+                        <div class="days-checkboxes">
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-mon" value="mon" class="day-checkbox">
+                                <label for="day-mon">Mon</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-tue" value="tue" class="day-checkbox">
+                                <label for="day-tue">Tue</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-wed" value="wed" class="day-checkbox">
+                                <label for="day-wed">Wed</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-thu" value="thu" class="day-checkbox">
+                                <label for="day-thu">Thu</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-fri" value="fri" class="day-checkbox">
+                                <label for="day-fri">Fri</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-sat" value="sat" class="day-checkbox">
+                                <label for="day-sat">Sat</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="day-sun" value="sun" class="day-checkbox">
+                                <label for="day-sun">Sun</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea id="instructions" class="form-control" rows="2" placeholder="e.g., Take with food"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supply-amount" class="form-label">Current Supply</label>
+                        <div class="supply-input">
+                            <input type="number" id="supply-amount" class="form-control" min="0" placeholder="Amount remaining">
+                            <select id="supply-unit" class="form-control">
+                                <option value="tablets">tablets</option>
+                                <option value="capsules">capsules</option>
+                                <option value="pills">pills</option>
+                                <option value="doses">doses</option>
+                                <option value="ml">ml</option>
+                                <option value="g">g</option>
+                                <option value="units">units</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="refill-reminder" class="form-check-input">
+                            <label for="refill-reminder" class="form-check-label">Remind me when supply is low</label>
+                        </div>
+                    </div>
+                    
+                    <div id="medication-extras" style="display: none;">
+                        <div id="barcode-display" class="form-group" style="display: none;">
+                            <label class="form-label">Barcode</label>
+                            <div class="barcode-value" id="barcode-value"></div>
+                        </div>
+                        
+                        <div id="photo-preview-container" class="form-group" style="display: none;">
+                            <label class="form-label">Photo</label>
+                            <div class="photo-preview">
+                                <img id="photo-preview" src="" alt="Medication photo">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="medication-id">
+                    <input type="hidden" id="barcode">
+                    <input type="hidden" id="photo">
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Update Medication</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Edit medication page loaded');
+            
+            // Get the medication ID from sessionStorage
+            const medicationId = sessionStorage.getItem('selectedMedicationId');
+            console.log('Medication ID:', medicationId);
+            
+            if (!medicationId) {
+                showToast('No medication selected', 'error');
+                setTimeout(() => window.history.back(), 1000);
+                return;
+            }
+            
+            // Load medication data
+            loadMedicationData(medicationId);
+            
+            // Setup form events
+            setupFormEvents();
+            
+            // Function to load medication data
+            function loadMedicationData(medicationId) {
+                try {
+                    console.log('Loading medication data');
+                    
+                    // Get medications from localStorage
+                    const medications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                    const medication = medications.find(med => med.id === medicationId);
+                    
+                    if (!medication) {
+                        showToast('Medication not found', 'error');
+                        setTimeout(() => window.history.back(), 1000);
+                        return;
+                    }
+                    
+                    console.log('Medication found:', medication);
+                    
+                    // Store medication ID in hidden field
+                    document.getElementById('medication-id').value = medication.id;
+                    
+                    // Fill form with medication data
+                    document.getElementById('name').value = medication.name || '';
+                    
+                    // Parse dosage
+                    if (medication.dosage) {
+                        const dosageParts = medication.dosage.split(' ');
+                        if (dosageParts.length >= 2) {
+                            document.getElementById('dosage-amount').value = dosageParts[0];
+                            document.getElementById('dosage-unit').value = dosageParts[1];
+                        } else {
+                            document.getElementById('dosage-amount').value = medication.dosage;
+                        }
+                    }
+                    
+                    // Set frequency
+                    document.getElementById('frequency').value = medication.frequency || 'once-daily';
+                    
+                    // Parse supply
+                    if (medication.supply) {
+                        const supplyParts = medication.supply.split(' ');
+                        if (supplyParts.length >= 2) {
+                            document.getElementById('supply-amount').value = supplyParts[0];
+                            document.getElementById('supply-unit').value = supplyParts[1];
+                        } else {
+                            document.getElementById('supply-amount').value = medication.supply;
+                        }
+                    }
+                    
+                    // Set instructions
+                    document.getElementById('instructions').value = medication.instructions || '';
+                    
+                    // Set refill reminder
+                    document.getElementById('refill-reminder').checked = medication.refillReminder || false;
+                    
+                    // Set barcode if exists
+                    if (medication.barcode) {
+                        document.getElementById('barcode').value = medication.barcode;
+                        document.getElementById('barcode-value').textContent = medication.barcode;
+                        document.getElementById('barcode-display').style.display = 'block';
+                        document.getElementById('medication-extras').style.display = 'block';
+                    }
+                    
+                    // Set photo if exists
+                    if (medication.photo) {
+                        document.getElementById('photo').value = medication.photo;
+                        document.getElementById('photo-preview').src = medication.photo;
+                        document.getElementById('photo-preview-container').style.display = 'block';
+                        document.getElementById('medication-extras').style.display = 'block';
+                    }
+                    
+                    // Setup time slots based on frequency
+                    setupTimeSlots(medication.frequency, medication.times || []);
+                    
+                    // Check day checkboxes if applicable
+                    if (medication.days && (medication.frequency === 'weekly' || medication.frequency === 'custom')) {
+                        document.getElementById('days-container').style.display = 'block';
+                        medication.days.forEach(day => {
+                            const checkbox = document.getElementById(`day-${day}`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+                } catch (err) {
+                    console.error('Error loading medication data:', err);
+                    showToast('Error loading medication data', 'error');
+                }
+            }
+            
+            // Setup time slots based on frequency and existing times
+            function setupTimeSlots(frequency, existingTimes) {
+                const container = document.getElementById('time-slots-container');
+                container.innerHTML = ''; // Clear container
+                
+                // Hide for as-needed medications
+                if (frequency === 'as-needed') {
+                    container.style.display = 'none';
+                    return;
+                }
+                
+                container.style.display = 'block';
+                
+                // Get default number of slots based on frequency
+                let slotCount = 1;
+                if (frequency === 'twice-daily') slotCount = 2;
+                if (frequency === 'three-daily') slotCount = 3;
+                if (frequency === 'four-daily') slotCount = 4;
+                
+                // Use existing times or create empty slots
+                const times = existingTimes.length > 0 ? existingTimes : Array(slotCount).fill('');
+                
+                // Create time slots
+                times.forEach((time, index) => {
+                    // Create the time slot element
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'time-slot';
+                    
+                    // Create time input
+                    const timeInput = document.createElement('input');
+                    timeInput.type = 'time';
+                    timeInput.className = 'form-control time-input';
+                    timeInput.value = time;
+                    timeInput.required = frequency !== 'as-needed';
+                    
+                    timeSlot.appendChild(timeInput);
+                    
+                    // For the first slot, add an add button
+                    if (index === 0) {
+                        const addButton = document.createElement('button');
+                        addButton.type = 'button';
+                        addButton.className = 'add-time-btn';
+                        addButton.innerHTML = '<i class="fas fa-plus-circle"></i>';
+                        
+                        addButton.addEventListener('click', addTimeSlot);
+                        
+                        timeSlot.appendChild(addButton);
+                    } else {
+                        // For other slots, add a remove button
+                        const removeButton = document.createElement('button');
+                        removeButton.type = 'button';
+                        removeButton.className = 'remove-time-btn';
+                        removeButton.innerHTML = '<i class="fas fa-minus-circle"></i>';
+                        
+                        removeButton.addEventListener('click', function() {
+                            timeSlot.remove();
+                        });
+                        
+                        timeSlot.appendChild(removeButton);
+                    }
+                    
+                    // Add to container
+                    container.appendChild(timeSlot);
+                });
+                
+                // Create label
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = 'Time(s)*';
+                container.prepend(label);
+            }
+            
+            function addTimeSlot() {
+                // Create new time slot
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                
+                // Create time input
+                const timeInput = document.createElement('input');
+                timeInput.type = 'time';
+                timeInput.className = 'form-control time-input';
+                timeInput.required = true;
+                
+                // Create remove button
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'remove-time-btn';
+                removeButton.innerHTML = '<i class="fas fa-minus-circle"></i>';
+                
+                removeButton.addEventListener('click', function() {
+                    timeSlot.remove();
+                });
+                
+                // Add elements to time slot
+                timeSlot.appendChild(timeInput);
+                timeSlot.appendChild(removeButton);
+                
+                // Add to container
+                document.getElementById('time-slots-container').appendChild(timeSlot);
+            }
+            
+            // Setup form events
+            function setupFormEvents() {
+                // Frequency change event
+                document.getElementById('frequency').addEventListener('change', function() {
+                    const frequency = this.value;
+                    
+                    // Handle time slots
+                    setupTimeSlots(frequency, []);
+                    
+                    // Handle days container
+                    if (frequency === 'weekly' || frequency === 'custom') {
+                        document.getElementById('days-container').style.display = 'block';
+                    } else {
+                        document.getElementById('days-container').style.display = 'none';
+                    }
+                });
+                
+                // Form submit event
+                document.getElementById('medication-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    try {
+                        console.log('Submitting medication form');
+                        
+                        // Get form data
+                        const medicationId = document.getElementById('medication-id').value;
+                        const name = document.getElementById('name').value;
+                        const dosageAmount = document.getElementById('dosage-amount').value;
+                        const dosageUnit = document.getElementById('dosage-unit').value;
+                        const frequency = document.getElementById('frequency').value;
+                        const instructions = document.getElementById('instructions').value;
+                        const supplyAmount = document.getElementById('supply-amount').value;
+                        const supplyUnit = document.getElementById('supply-unit').value;
+                        const refillReminder = document.getElementById('refill-reminder').checked;
+                        const barcode = document.getElementById('barcode').value;
+                        const photo = document.getElementById('photo').value;
+                        
+                        // Get time slots
+                        const timeInputs = document.querySelectorAll('.time-input');
+                        const times = Array.from(timeInputs).map(input => input.value).filter(Boolean);
+                        
+                        // Validate times for non-as-needed medications
+                        if (frequency !== 'as-needed' && times.length === 0) {
+                            showToast('Please enter at least one medication time', 'error');
+                            return;
+                        }
+                        
+                        // Get selected days for weekly/custom frequency
+                        let days = [];
+                        if (frequency === 'weekly' || frequency === 'custom') {
+                            const dayCheckboxes = document.querySelectorAll('.day-checkbox:checked');
+                            days = Array.from(dayCheckboxes).map(cb => cb.value);
+                            
+                            if (days.length === 0) {
+                                showToast('Please select at least one day of the week', 'error');
+                                return;
+                            }
+                        }
+                        
+                        // Format dosage and supply
+                        const dosage = dosageAmount && dosageUnit ? `${dosageAmount} ${dosageUnit}` : '';
+                        const supply = supplyAmount && supplyUnit ? `${supplyAmount} ${supplyUnit}` : null;
+                        
+                        // Get medications from localStorage
+                        const medications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                        const medIndex = medications.findIndex(med => med.id === medicationId);
+                        
+                        if (medIndex === -1) {
+                            showToast('Medication not found', 'error');
+                            return;
+                        }
+                        
+                        // Update medication
+                        medications[medIndex] = {
+                            ...medications[medIndex],
+                            name,
+                            dosage,
+                            frequency,
+                            times,
+                            days,
+                            instructions,
+                            supply,
+                            refillReminder,
+                            barcode,
+                            photo,
+                            dateUpdated: new Date().toISOString()
+                        };
+                        
+                        // Save to localStorage
+                        localStorage.setItem('myMed_medications', JSON.stringify(medications));
+                        
+                        showToast('Medication updated successfully', 'success');
+                        
+                        // Go back to details page
+                        setTimeout(() => window.history.back(), 1000);
+                    } catch (err) {
+                        console.error('Error updating medication:', err);
+                        showToast('Error updating medication', 'error');
+                    }
+                });
+            }
+            
+            // Toast notification function
+            function showToast(message, type = 'info', duration = 3000) {
+                console.log(`Toast: ${message} (${type})`);
+                
+                let toastContainer = document.querySelector('.toast-container');
+                
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container';
+                    document.body.appendChild(toastContainer);
+                }
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                // Set icon based on type
+                let icon = 'fa-info-circle';
+                if (type === 'success') icon = 'fa-check-circle';
+                if (type === 'error') icon = 'fa-exclamation-circle';
+                if (type === 'warning') icon = 'fa-exclamation-triangle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="toast-message">${message}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    toast.classList.add('toast-visible');
+                }, 10);
+                
+                // Remove after duration
+                setTimeout(() => {
+                    toast.classList.remove('toast-visible');
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, duration);
+            }
+        });
+    </script>
+</body>
+</html>

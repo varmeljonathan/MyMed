@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - myMed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #5D5CDE;
+            --primary-light: rgba(93, 92, 222, 0.1);
+            --primary-dark: #4847b0;
+            --text-main: #333333;
+            --text-secondary: #666666;
+            --text-light: #808080;
+            --border-color: #dddddd;
+            --card-bg: #ffffff;
+            --bg-color: #f5f5f5;
+            --section-divide: #eeeeee;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            
+            /* Dark mode colors */
+            --dark-bg: #1e1e1e;
+            --dark-card-bg: #2d2d2d;
+            --dark-text-main: #e0e0e0;
+            --dark-text-secondary: #b0b0b0;
+            --dark-text-light: #909090;
+            --dark-border-color: #444444;
+            --dark-section-divide: #3a3a3a;
+            --dark-hover: #3a3a3a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text-main);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 75px 20px;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-title i {
+            margin-right: 10px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 15px;
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .welcome-section {
+            margin-bottom: 25px;
+        }
+        
+        .welcome-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .dark-mode .welcome-card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+        
+        .welcome-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .welcome-content h2 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .welcome-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .welcome-date {
+            color: var(--dark-text-secondary);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-divide);
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dark-mode .section-title {
+            border-bottom-color: var(--dark-section-divide);
+            color: var(--dark-text-main);
+        }
+        
+        .view-all {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .view-all i {
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .search-box {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+        
+        .dark-mode .search-input {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+            color: var(--dark-text-main);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .dark-mode .search-icon {
+            color: var(--dark-text-light);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .dark-mode .card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+        
+        .medication-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .medication-item:last-child {
+            border-bottom: none;
+        }
+        
+        .medication-item:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .dark-mode .medication-item {
+            border-bottom-color: var(--dark-border-color);
+        }
+        
+        .dark-mode .medication-item:hover {
+            background-color: var(--dark-hover);
+        }
+        
+        .medication-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .medication-icon i {
+            font-size: 1.2rem;
+        }
+        
+        .medication-content {
+            flex: 1;
+        }
+        
+        .medication-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--text-main);
+        }
+        
+        .dark-mode .medication-name {
+            color: var(--dark-text-main);
+        }
+        
+        .medication-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .dark-mode .medication-info {
+            color: var(--dark-text-secondary);
+        }
+        
+        .medication-schedule {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .dark-mode .medication-schedule {
+            color: var(--dark-text-light);
+        }
+        
+        .medication-action {
+            color: var(--text-light);
+            margin-left: 10px;
+        }
+        
+        .dark-mode .medication-action {
+            color: var(--dark-text-light);
+        }
+        
+        .time-badge {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        
+        .health-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .health-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dark-mode .health-card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+        
+        .health-card-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dark-mode .health-card-title {
+            color: var(--dark-text-secondary);
+        }
+        
+        .health-card-title i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+        
+        .health-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .health-normal {
+            color: var(--success-color);
+        }
+        
+        .health-warning {
+            color: var(--warning-color);
+        }
+        
+        .health-danger {
+            color: var(--danger-color);
+        }
+        
+        .health-status {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .dark-mode .health-status {
+            color: var(--dark-text-light);
+        }
+        
+        .add-button {
+            position: fixed;
+            bottom: 75px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .add-button:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .dark-mode .empty-state {
+            color: var(--dark-text-light);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            padding: 10px 0;
+            z-index: 100;
+        }
+        
+        .dark-mode .bottom-nav {
+            background-color: var(--dark-card-bg);
+            border-top-color: var(--dark-border-color);
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            padding: 5px 0;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .dark-mode .nav-item {
+            color: var(--dark-text-secondary);
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        
+        .nav-text {
+            font-size: 0.75rem;
+        }
+        
+        /* Toast notification system */
+        .toast-container {
+            position: fixed;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .toast {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            min-width: 250px;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .toast.toast-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dark-mode .toast {
+            background-color: var(--dark-card-bg);
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .toast.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .toast-icon {
+            margin-right: 12px;
+        }
+        
+        .toast.success .toast-icon {
+            color: var(--success-color);
+        }
+        
+        .toast.error .toast-icon {
+            color: var(--danger-color);
+        }
+        
+        .toast.info .toast-icon {
+            color: var(--primary-color);
+        }
+        
+        .toast.warning .toast-icon {
+            color: var(--warning-color);
+        }
+        
+        .credit-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 20px;
+            padding-bottom: 10px;
+        }
+        
+        .dark-mode .credit-footer {
+            color: var(--dark-text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <i class="fas fa-pills"></i> myMed
+            </h1>
+            <div class="header-actions">
+                <a href="notifications.html" class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    <span id="notification-badge" class="notification-badge" style="display: none;">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-card">
+                <div class="welcome-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="welcome-content">
+                    <h2 id="welcome-name">Welcome back</h2>
+                    <div class="welcome-date" id="current-date"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Health Metrics -->
+        <div class="section-title">
+            Health Dashboard
+            <a href="health_tracker.html" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        
+        <div class="health-metrics">
+            <div class="health-card">
+                <div class="health-card-title">
+                    <i class="fas fa-heart"></i> Blood Pressure
+                </div>
+                <div class="health-value" id="bp-value">--/--</div>
+                <div class="health-status" id="bp-status">No readings</div>
+            </div>
+            
+            <div class="health-card">
+                <div class="health-card-title">
+                    <i class="fas fa-tint"></i> Blood Glucose
+                </div>
+                <div class="health-value" id="glucose-value">--</div>
+                <div class="health-status" id="glucose-status">No readings</div>
+            </div>
+        </div>
+
+        <!-- Today's Medications -->
+        <div class="section-title">
+            Today's Schedule
+            <a href="reminders.html" class="view-all">Reminders <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div id="today-medications">
+            <!-- This will be populated by JavaScript -->
+            <div id="empty-today" class="empty-state">
+                <p>No medications scheduled for today</p>
+            </div>
+        </div>
+
+        <!-- All Medications -->
+        <div class="section-title">
+            My Medications
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Search medications...">
+        </div>
+        
+        <div id="all-medications">
+            <!-- This will be populated by JavaScript -->
+            <div id="empty-medications" class="empty-state">
+                <p>No medications added yet. Click the + button to add one.</p>
+            </div>
+        </div>
+        
+        <!-- Add Medication Button -->
+        <a href="add_medication.html" class="add-button">
+            <i class="fas fa-plus"></i>
+        </a>
+        
+        <!-- Credit Footer -->
+        <div class="credit-footer">
+            by Venegda Mel
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span class="nav-text">Home</span>
+        </a>
+        <a href="reminders.html" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span class="nav-text">Reminders</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span class="nav-text">Reports</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span class="nav-text">Profile</span>
+        </a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = checkUserLogin();
+            if (!currentUser) return;
+            
+            // Update welcome message
+            updateWelcomeMessage(currentUser);
+            
+            // Check for dark mode
+            checkDarkMode();
+            
+            // Load notifications count
+            updateNotificationBadge();
+            
+            // Load medications data
+            loadMedications();
+            
+            // Load health metrics
+            loadHealthMetrics();
+            
+            // Set up search functionality
+            document.getElementById('search-input').addEventListener('input', function() {
+                searchMedications(this.value);
+            });
+            
+            // Function to check if user is logged in
+            function checkUserLogin() {
+                try {
+                    const userJson = sessionStorage.getItem('myMed_currentUser');
+                    if (!userJson) {
+                        window.location.href = 'login.html';
+                        return null;
+                    }
+                    return JSON.parse(userJson);
+                } catch (err) {
+                    console.error('Error checking login status:', err);
+                    window.location.href = 'login.html';
+                    return null;
+                }
+            }
+            
+            // Function to update welcome message
+            function updateWelcomeMessage(user) {
+                // Update user name
+                document.getElementById('welcome-name').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+                
+                // Update current date
+                const options = { weekday: 'long', month: 'long', day: 'numeric' };
+                const today = new Date().toLocaleDateString('en-US', options);
+                document.getElementById('current-date').textContent = today;
+            }
+            
+            // Function to check dark mode
+            function checkDarkMode() {
+                const darkModeEnabled = localStorage.getItem('myMed_darkMode') === 'true';
+                const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (darkModeEnabled || (localStorage.getItem('myMed_darkMode') === null && systemPrefersDark)) {
+                    document.body.classList.add('dark-mode');
+                }
+            }
+            
+            // Update notification badge
+            function updateNotificationBadge() {
+                try {
+                    const badge = document.getElementById('notification-badge');
+                    
+                    // Get due reminders
+                    const reminders = JSON.parse(localStorage.getItem('myMed_reminders')) || [];
+                    const now = new Date();
+                    const dueReminders = reminders.filter(rem => {
+                        return rem.userId === currentUser.id && 
+                               new Date(rem.time) <= now && 
+                               !rem.taken;
+                    });
+                    
+                    const unreadCount = dueReminders.length;
+                    
+                    if (unreadCount > 0) {
+                        badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('Error updating notification badge:', err);
+                }
+            }
+            
+            // Load medications
+            function loadMedications() {
+                try {
+                    // Get medications from localStorage
+                    const allMedications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                    const userMedications = allMedications.filter(med => med.userId === currentUser.id);
+                    
+                    // Display medications
+                    displayAllMedications(userMedications);
+                    displayTodayMedications(userMedications);
+                } catch (err) {
+                    console.error('Error loading medications:', err);
+                    showToast('Error loading medications', 'error');
+                }
+            }
+            
+            // Load health metrics
+            function loadHealthMetrics() {
+                try {
+                    // Get BP readings
+                    const bpReadings = JSON.parse(localStorage.getItem('myMed_bp_readings')) || [];
+                    const userBPReadings = bpReadings.filter(reading => reading.userId === currentUser.id);
+                    
+                    // Get glucose readings
+                    const glucoseReadings = JSON.parse(localStorage.getItem('myMed_glucose_readings')) || [];
+                    const userGlucoseReadings = glucoseReadings.filter(reading => reading.userId === currentUser.id);
+                    
+                    // Update BP card
+                    if (userBPReadings.length > 0) {
+                        // Sort by date, most recent first
+                        userBPReadings.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        const latestBP = userBPReadings[0];
+                        
+                        document.getElementById('bp-value').textContent = `${latestBP.systolic}/${latestBP.diastolic}`;
+                        
+                        // Set BP status and color
+                        const bpCategory = getBPCategory(latestBP.systolic, latestBP.diastolic);
+                        let bpStatus = '';
+                        
+                        switch (bpCategory) {
+                            case 'normal':
+                                bpStatus = 'Normal';
+                                document.getElementById('bp-value').className = 'health-value health-normal';
+                                break;
+                            case 'elevated':
+                                bpStatus = 'Elevated';
+                                document.getElementById('bp-value').className = 'health-value health-warning';
+                                break;
+                            case 'stage1':
+                                bpStatus = 'Stage 1 Hypertension';
+                                document.getElementById('bp-value').className = 'health-value health-warning';
+                                break;
+                            case 'stage2':
+                                bpStatus = 'Stage 2 Hypertension';
+                                document.getElementById('bp-value').className = 'health-value health-danger';
+                                break;
+                        }
+                        
+                        document.getElementById('bp-status').textContent = bpStatus;
+                    }
+                    
+                    // Update glucose card
+                    if (userGlucoseReadings.length > 0) {
+                        // Sort by date, most recent first
+                        userGlucoseReadings.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        const latestGlucose = userGlucoseReadings[0];
+                        
+                        document.getElementById('glucose-value').textContent = `${latestGlucose.value}`;
+                        
+                        // Set glucose status and color
+                        const glucoseCategory = getGlucoseCategory(latestGlucose.value);
+                        let glucoseStatus = '';
+                        
+                        switch (glucoseCategory) {
+                            case 'normal':
+                                glucoseStatus = 'Normal';
+                                document.getElementById('glucose-value').className = 'health-value health-normal';
+                                break;
+                            case 'prediabetes':
+                                glucoseStatus = 'Prediabetes Range';
+                                document.getElementById('glucose-value').className = 'health-value health-warning';
+                                break;
+                            case 'diabetes':
+                                glucoseStatus = 'Diabetes Range';
+                                document.getElementById('glucose-value').className = 'health-value health-danger';
+                                break;
+                        }
+                        
+                        document.getElementById('glucose-status').textContent = `${glucoseStatus} (${latestGlucose.type.replace('_', ' ')})`;
+                    }
+                } catch (err) {
+                    console.error('Error loading health metrics:', err);
+                }
+            }
+            
+            // Display all medications
+            function displayAllMedications(medications) {
+                const container = document.getElementById('all-medications');
+                const emptyMessage = document.getElementById('empty-medications');
+                
+                // Clear container (except empty message)
+                Array.from(container.children).forEach(child => {
+                    if (child !== emptyMessage) {
+                        child.remove();
+                    }
+                });
+                
+                // Show empty message if no medications
+                if (medications.length === 0) {
+                    emptyMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Hide empty message
+                emptyMessage.style.display = 'none';
+                
+                // Sort medications by name
+                medications.sort((a, b) => a.name.localeCompare(b.name));
+                
+                // Create card for medications
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                // Add each medication
+                medications.forEach(med => {
+                    const item = document.createElement('div');
+                    item.className = 'medication-item';
+                    item.setAttribute('data-id', med.id);
+                    
+                    // Format frequency text
+                    let frequencyText = getFrequencyText(med);
+                    
+                    item.innerHTML = `
+                        <div class="medication-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <div class="medication-content">
+                            <div class="medication-name">${med.name}</div>
+                            <div class="medication-info">${med.dosage}</div>
+                            <div class="medication-schedule">${frequencyText}</div>
+                        </div>
+                        <div class="medication-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    `;
+                    
+                    // Add click handler
+                    item.addEventListener('click', function() {
+                        sessionStorage.setItem('selectedMedicationId', med.id);
+                        window.location.href = 'medication_details.html';
+                    });
+                    
+                    card.appendChild(item);
+                });
+                
+                container.appendChild(card);
+            }
+            
+            // Display today's medications
+            function displayTodayMedications(medications) {
+                const container = document.getElementById('today-medications');
+                const emptyMessage = document.getElementById('empty-today');
+                
+                // Clear container (except empty message)
+                Array.from(container.children).forEach(child => {
+                    if (child !== emptyMessage) {
+                        child.remove();
+                    }
+                });
+                
+                // Filter for today's medications
+                const todayMeds = getTodayMedications(medications);
+                
+                // Show empty message if no medications
+                if (todayMeds.length === 0) {
+                    emptyMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Hide empty message
+                emptyMessage.style.display = 'none';
+                
+                // Sort by time
+                todayMeds.sort((a, b) => {
+                    if (!a.times[0] || !b.times[0]) return 0;
+                    return a.times[0].localeCompare(b.times[0]);
+                });
+                
+                // Create card for medications
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                // Add each medication
+                todayMeds.forEach(med => {
+                    const item = document.createElement('div');
+                    item.className = 'medication-item';
+                    item.setAttribute('data-id', med.id);
+                    
+                    // Format time
+                    let timeDisplay = med.times && med.times.length > 0 ? 
+                        formatTime(med.times[0]) : 'No time set';
+                    
+                    item.innerHTML = `
+                        <div class="medication-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="medication-content">
+                            <div class="medication-name">${med.name}</div>
+                            <div class="medication-info">${med.dosage}</div>
+                        </div>
+                        <div class="time-badge">
+                            ${timeDisplay}
+                        </div>
+                    `;
+                    
+                    // Add click handler
+                    item.addEventListener('click', function() {
+                        sessionStorage.setItem('selectedMedicationId', med.id);
+                        window.location.href = 'medication_details.html';
+                    });
+                    
+                    card.appendChild(item);
+                });
+                
+                container.appendChild(card);
+            }
+            
+            // Get medications scheduled for today
+            function getTodayMedications(medications) {
+                const today = new Date();
+                const weekday = today.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase().slice(0, 3);
+                
+                return medications.filter(med => {
+                    if (med.frequency === 'as-needed') return false;
+                    
+                    if (med.frequency === 'weekly' || med.frequency === 'custom') {
+                        return med.days && med.days.includes(weekday);
+                    }
+                    
+                    // All other frequencies are considered daily
+                    return true;
+                });
+            }
+            
+            // Search medications
+            function searchMedications(query) {
+                try {
+                    // Get medications from localStorage
+                    const allMedications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                    let userMedications = allMedications.filter(med => med.userId === currentUser.id);
+                    
+                    // Filter by search query if provided
+                    if (query) {
+                        const searchTerm = query.toLowerCase();
+                        userMedications = userMedications.filter(med => 
+                            (med.name && med.name.toLowerCase().includes(searchTerm)) || 
+                            (med.dosage && med.dosage.toLowerCase().includes(searchTerm)) ||
+                            (med.instructions && med.instructions.toLowerCase().includes(searchTerm))
+                        );
+                    }
+                    
+                    // Display filtered medications
+                    displayAllMedications(userMedications);
+                } catch (err) {
+                    console.error('Error searching medications:', err);
+                }
+            }
+            
+            // Format time helper function
+            function formatTime(timeString) {
+                if (!timeString) return '';
+                
+                try {
+                    const [hours, minutes] = timeString.split(':');
+                    const hour = parseInt(hours);
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const hour12 = hour % 12 || 12;
+                    
+                    return `${hour12}:${minutes} ${ampm}`;
+                } catch (error) {
+                    console.error('Error formatting time:', error);
+                    return timeString;
+                }
+            }
+            
+            // Get frequency text helper
+            function getFrequencyText(medication) {
+                switch (medication.frequency) {
+                    case 'once-daily': return 'Once daily';
+                    case 'twice-daily': return 'Twice daily';
+                    case 'three-daily': return 'Three times daily';
+                    case 'four-daily': return 'Four times daily';
+                    case 'weekly': 
+                        if (medication.days && medication.days.length > 0) {
+                            return `Weekly on ${medication.days.map(d => capitalizeFirst(d)).join(', ')}`;
+                        }
+                        return 'Weekly';
+                    case 'as-needed': return 'As needed';
+                    case 'custom': return 'Custom schedule';
+                    default: return medication.frequency || 'Unknown';
+                }
+            }
+            
+            // Capitalize first letter
+            function capitalizeFirst(string) {
+                if (!string) return '';
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+            
+            // Get BP category
+            function getBPCategory(systolic, diastolic) {
+                if (systolic < 120 && diastolic < 80) {
+                    return 'normal';
+                } else if (systolic >= 120 && systolic <= 129 && diastolic < 80) {
+                    return 'elevated';
+                } else if ((systolic >= 130 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89)) {
+                    return 'stage1';
+                } else if (systolic >= 140 || diastolic >= 90) {
+                    return 'stage2';
+                }
+                
+                return 'normal'; // Default fallback
+            }
+            
+            // Get glucose category
+            function getGlucoseCategory(glucose) {
+                // Based on fasting blood glucose values
+                if (glucose < 100) {
+                    return 'normal';
+                } else if (glucose >= 100 && glucose <= 125) {
+                    return 'prediabetes';
+                } else if (glucose >= 126) {
+                    return 'diabetes';
+                }
+                
+                return 'normal'; // Default fallback
+            }
+            
+            // Toast notification function
+            function showToast(message, type = 'info', duration = 3000) {
+                let toastContainer = document.querySelector('.toast-container');
+                
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container';
+                    document.body.appendChild(toastContainer);
+                }
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let iconClass = 'fa-info-circle';
+                if (type === 'success') iconClass = 'fa-check-circle';
+                if (type === 'error') iconClass = 'fa-exclamation-circle';
+                if (type === 'warning') iconClass = 'fa-exclamation-triangle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="toast-message">${message}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    toast.classList.add('toast-visible');
+                }, 10);
+                
+                // Remove after duration
+                setTimeout(() => {
+                    toast.classList.remove('toast-visible');
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, duration);
+            }
+        });
+    </script>
+</body>
+</html>

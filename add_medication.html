@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Medication - myMed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-header with-back-button">
+            <button onclick="window.location.href='home.html'" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Add Medication</h1>
+        </div>
+
+        <div class="entry-methods">
+            <button id="manual-entry-btn" class="entry-method-btn active">
+                <i class="fas fa-keyboard"></i>
+                <span>Manual Entry</span>
+            </button>
+            <button id="scan-barcode-btn" class="entry-method-btn">
+                <i class="fas fa-barcode"></i>
+                <span>Scan Barcode</span>
+            </button>
+            <button id="take-photo-btn" class="entry-method-btn">
+                <i class="fas fa-camera"></i>
+                <span>Take Photo</span>
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form id="medication-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Medication Name*</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dosage" class="form-label">Dosage*</label>
+                        <div class="dosage-input">
+                            <input type="number" id="dosage-amount" class="form-control" step="0.1" min="0.1" required>
+                            <select id="dosage-unit" class="form-control">
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="g">g</option>
+                                <option value="ml">ml</option>
+                                <option value="tablet">tablet(s)</option>
+                                <option value="capsule">capsule(s)</option>
+                                <option value="pill">pill(s)</option>
+                                <option value="drop">drop(s)</option>
+                                <option value="spray">spray(s)</option>
+                                <option value="unit">unit(s)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="frequency" class="form-label">Frequency*</label>
+                        <select id="frequency" class="form-control" required>
+                            <option value="once-daily">Once daily</option>
+                            <option value="twice-daily">Twice daily</option>
+                            <option value="three-daily">Three times daily</option>
+                            <option value="four-daily">Four times daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="as-needed">As needed (PRN)</option>
+                            <option value="custom">Custom schedule</option>
+                        </select>
+                    </div>
+                    
+                    <div id="time-slots-container" class="form-group">
+                        <label class="form-label">Time(s)*</label>
+                        <div class="time-slot">
+                            <input type="time" class="form-control time-input" required>
+                            <button type="button" class="add-time-btn">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="days-container" class="form-group" style="display: none;">
+                        <label class="form-label">Days of Week</label>
+                        <div class="days-checkboxes">
+                            <div class="form-check">
+                                <input type="checkbox" id="day-mon" value="mon" class="form-check-input day-checkbox">
+                                <label for="day-mon" class="form-check-label">Mon</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-tue" value="tue" class="form-check-input day-checkbox">
+                                <label for="day-tue" class="form-check-label">Tue</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-wed" value="wed" class="form-check-input day-checkbox">
+                                <label for="day-wed" class="form-check-label">Wed</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-thu" value="thu" class="form-check-input day-checkbox">
+                                <label for="day-thu" class="form-check-label">Thu</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-fri" value="fri" class="form-check-input day-checkbox">
+                                <label for="day-fri" class="form-check-label">Fri</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-sat" value="sat" class="form-check-input day-checkbox">
+                                <label for="day-sat" class="form-check-label">Sat</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="day-sun" value="sun" class="form-check-input day-checkbox">
+                                <label for="day-sun" class="form-check-label">Sun</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea id="instructions" class="form-control" rows="2" placeholder="e.g., Take with food"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supply" class="form-label">Current Supply</label>
+                        <div class="supply-input">
+                            <input type="number" id="supply-amount" class="form-control" min="0" placeholder="Amount remaining">
+                            <select id="supply-unit" class="form-control">
+                                <option value="tablets">tablets</option>
+                                <option value="capsules">capsules</option>
+                                <option value="pills">pills</option>
+                                <option value="doses">doses</option>
+                                <option value="ml">ml</option>
+                                <option value="g">g</option>
+                                <option value="units">units</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="refill-reminder" class="form-check-input">
+                            <label for="refill-reminder" class="form-check-label">Remind me when supply is low</label>
+                        </div>
+                    </div>
+                    
+                    <div id="medication-extras" style="display: none;">
+                        <div id="barcode-display" class="form-group" style="display: none;">
+                            <label class="form-label">Barcode</label>
+                            <div class="barcode-value" id="barcode-value"></div>
+                        </div>
+                        
+                        <div id="photo-preview-container" class="form-group" style="display: none;">
+                            <label class="form-label">Photo</label>
+                            <div class="photo-preview">
+                                <img id="photo-preview" src="" alt="Medication photo">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="barcode" value="">
+                    <input type="hidden" id="photo" value="">
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Save Medication</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (!UserManager.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Handle entry method button clicks
+            const entryMethodBtns = document.querySelectorAll('.entry-method-btn');
+            entryMethodBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    entryMethodBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real app, this would show different entry methods
+                    // For this demo, we'll just show the form
+                });
+            });
+            
+            // Handle frequency change
+            const frequencySelect = document.getElementById('frequency');
+            const timeSlotsContainer = document.getElementById('time-slots-container');
+            const daysContainer = document.getElementById('days-container');
+            
+            frequencySelect.addEventListener('change', function() {
+                const frequency = this.value;
+                
+                // Handle time slots visibility
+                if (frequency === 'as-needed') {
+                    timeSlotsContainer.style.display = 'none';
+                } else {
+                    timeSlotsContainer.style.display = 'block';
+                    
+                    // Clear all time slots except the first one
+                    const timeSlots = timeSlotsContainer.querySelectorAll('.time-slot');
+                    for (let i = 1; i < timeSlots.length; i++) {
+                        timeSlots[i].remove();
+                    }
+                    
+                    // Add appropriate number of time slots
+                    if (frequency === 'twice-daily') {
+                        addTimeSlot();
+                    } else if (frequency === 'three-daily') {
+                        addTimeSlot();
+                        addTimeSlot();
+                    } else if (frequency === 'four-daily') {
+                        addTimeSlot();
+                        addTimeSlot();
+                        addTimeSlot();
+                    }
+                }
+                
+                // Handle days container visibility
+                if (frequency === 'weekly' || frequency === 'custom') {
+                    daysContainer.style.display = 'block';
+                } else {
+                    daysContainer.style.display = 'none';
+                }
+            });
+            
+            // Handle add time slot button
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.add-time-btn')) {
+                    addTimeSlot();
+                }
+                if (e.target.closest('.remove-time-btn')) {
+                    e.target.closest('.time-slot').remove();
+                }
+            });
+            
+            // Function to add a new time slot
+            function addTimeSlot() {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.innerHTML = `
+                    <input type="time" class="form-control time-input" required>
+                    <button type="button" class="remove-time-btn">
+                        <i class="fas fa-minus-circle"></i>
+                    </button>
+                `;
+                timeSlotsContainer.appendChild(timeSlot);
+            }
+            
+            // Handle form submission
+            const medicationForm = document.getElementById('medication-form');
+            
+            medicationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Gather form data
+                const name = document.getElementById('name').value;
+                const dosageAmount = document.getElementById('dosage-amount').value;
+                const dosageUnit = document.getElementById('dosage-unit').value;
+                const dosage = `${dosageAmount} ${dosageUnit}`;
+                const frequency = document.getElementById('frequency').value;
+                
+                // Get times
+                const timeInputs = document.querySelectorAll('.time-input');
+                const times = Array.from(timeInputs).map(input => input.value).filter(Boolean);
+                
+                // Validate times for non-as-needed medications
+                if (frequency !== 'as-needed' && times.length === 0) {
+                    UIHelper.showToast('Please enter at least one medication time', 'error');
+                    return;
+                }
+                
+                // Get days for weekly/custom frequency
+                const days = [];
+                if (frequency === 'weekly' || frequency === 'custom') {
+                    const dayCheckboxes = document.querySelectorAll('.day-checkbox:checked');
+                    dayCheckboxes.forEach(cb => days.push(cb.value));
+                    
+                    if (days.length === 0) {
+                        UIHelper.showToast('Please select at least one day of the week', 'error');
+                        return;
+                    }
+                }
+                
+                // Get other form data
+                const instructions = document.getElementById('instructions').value;
+                
+                let supply = null;
+                const supplyAmount = document.getElementById('supply-amount').value;
+                if (supplyAmount) {
+                    const supplyUnit = document.getElementById('supply-unit').value;
+                    supply = `${supplyAmount} ${supplyUnit}`;
+                }
+                
+                const refillReminder = document.getElementById('refill-reminder').checked;
+                const barcode = document.getElementById('barcode').value;
+                const photo = document.getElementById('photo').value;
+                
+                // Create medication object
+                const medicationData = {
+                    name,
+                    dosage,
+                    frequency,
+                    times,
+                    days,
+                    instructions,
+                    supply,
+                    refillReminder,
+                    barcode,
+                    photo
+                };
+                
+                // Add medication
+                const result = MedicationManager.addMedication(medicationData);
+                
+                if (result.success) {
+                    UIHelper.showToast(result.message, 'success');
+                    
+                    // Create reminders for this medication
+                    ReminderManager.createMedicationReminders(result.medicationId);
+                    
+                    // Redirect to home page after short delay
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 1500);
+                } else {
+                    UIHelper.showToast(result.message, 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

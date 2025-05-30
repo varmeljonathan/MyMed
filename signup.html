@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-title="create_account,app_name">Create Account - myMed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Add translations script -->
+    <script src="js/translations.js"></script>
+    <style>
+        :root {
+            --primary-color: #5D5CDE;
+            --primary-dark: #4a49b3;
+            --primary-light: #7e7de8;
+            --bg-light: #FFFFFF;
+            --text-light: #333333;
+            --bg-dark: #181818;
+            --text-dark: #e9ecef;
+            --card-dark: #242424;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            position: relative;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .card {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(93, 92, 222, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 15px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .dark-mode .form-control {
+            background-color: #333;
+            border-color: #444;
+            color: #e9ecef;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.1);
+            outline: none;
+        }
+
+        .form-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .dark-mode .form-text {
+            color: #adb5bd;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-alt {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            margin-top: 15px;
+        }
+
+        .btn-alt:hover {
+            background-color: rgba(93, 92, 222, 0.05);
+        }
+
+        .dark-mode .btn-alt {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .dark-mode .btn-alt:hover {
+            background-color: rgba(93, 92, 222, 0.2);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #6c757d;
+        }
+
+        .text-divider::before,
+        .text-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #e9ecef;
+        }
+
+        .dark-mode .text-divider::before,
+        .dark-mode .text-divider::after {
+            background-color: #444;
+        }
+
+        .text-divider span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        .link {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .credit-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .credit-footer {
+            color: #adb5bd;
+        }
+
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            min-width: 250px;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .toast.toast-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dark-mode .toast {
+            background-color: #333;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+
+        .toast-icon {
+            margin-right: 12px;
+        }
+
+        .toast.success .toast-icon {
+            color: #10B981;
+        }
+
+        .toast.error .toast-icon {
+            color: #EF4444;
+        }
+        
+        /* Language Selector Styles */
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .lang-btn {
+            background-color: rgba(93, 92, 222, 0.1);
+            border: 1px solid rgba(93, 92, 222, 0.3);
+            color: var(--primary-color);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dark-mode .lang-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .lang-btn:hover {
+            background-color: rgba(93, 92, 222, 0.2);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            width: 140px;
+            z-index: 110;
+            overflow: hidden;
+            display: none;
+        }
+
+        .dark-mode .language-dropdown {
+            background-color: var(--card-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .language-dropdown.active {
+            display: block;
+        }
+
+        .language-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .language-option:hover {
+            background-color: rgba(93, 92, 222, 0.1);
+        }
+
+        .dark-mode .language-option:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Language selector -->
+        <div class="language-selector">
+            <button id="language-toggle" class="lang-btn">
+                <i class="fas fa-globe"></i>
+                <span id="current-lang">EN</span>
+            </button>
+            <div id="language-dropdown" class="language-dropdown">
+                <div class="language-option" data-lang="en">English</div>
+                <div class="language-option" data-lang="fr">Français</div>
+            </div>
+        </div>
+
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-pills"></i>
+            </div>
+            <div class="logo-text" data-i18n="app_name">myMed</div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="form-title" data-i18n="create_account">Create your account</h2>
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label" data-i18n="full_name">Full Name</label>
+                        <input type="text" id="name" class="form-control" required data-i18n-placeholder="enter_name" placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label" data-i18n="email_address">Email address</label>
+                        <input type="email" id="email" class="form-control" required data-i18n-placeholder="enter_email" placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label" data-i18n="password">Password</label>
+                        <input type="password" id="password" class="form-control" required data-i18n-placeholder="create_password" placeholder="Create a password">
+                        <div class="form-text" data-i18n="min_password">Must be at least 6 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label" data-i18n="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm-password" class="form-control" required data-i18n-placeholder="confirm_your_password" placeholder="Confirm your password">
+                    </div>
+                    
+                    <button type="submit" class="btn" data-i18n="create_account_btn">Create Account</button>
+                </form>
+                
+                <div class="text-divider">
+                    <span data-i18n="or">or</span>
+                </div>
+                
+                <a href="javascript:void(0)" id="demo-btn" class="btn btn-alt">
+                    <i class="fas fa-play-circle"></i> <span data-i18n="try_demo">Try Demo Mode</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <span data-i18n="already_account">Already have an account?</span> <a href="login.html" class="link" data-i18n="sign_in">Sign In</a>
+        </div>
+        
+        <div class="credit-footer">
+            <span data-i18n="by">by</span> Venegda Mel
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if dark mode is enabled
+            checkDarkMode();
+            
+            // Set up form submission
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // Validate password match
+                if (password !== confirmPassword) {
+                    showToast(i18n.t('passwords_not_match'), 'error');
+                    return;
+                }
+                
+                // Validate password length
+                if (password.length < 6) {
+                    showToast(i18n.t('password_too_short'), 'error');
+                    return;
+                }
+                
+                try {
+                    // Get existing users
+                    const users = JSON.parse(localStorage.getItem('myMed_users')) || [];
+                    
+                    // Check if email already exists
+                    if (users.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+                        showToast(i18n.t('email_exists'), 'error');
+                        return;
+                    }
+                    
+                    // Create new user
+                    const newUser = {
+                        id: 'user_' + Date.now(),
+                        name: name,
+                        email: email,
+                        password: password,
+                        dateCreated: new Date().toISOString()
+                    };
+                    
+                    // Add to users array
+                    users.push(newUser);
+                    localStorage.setItem('myMed_users', JSON.stringify(users));
+                    
+                    showToast(i18n.t('account_created'), 'success');
+                    
+                    // Redirect to login page after short delay
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } catch (err) {
+                    console.error('Error creating account:', err);
+                    showToast(i18n.t('error_account'), 'error');
+                }
+            });
+            
+            // Demo button click
+            document.getElementById('demo-btn').addEventListener('click', function() {
+                // Make sure demo data exists
+                initDemoData();
+                
+                // Log in as demo user
+                sessionStorage.setItem('myMed_currentUser', JSON.stringify({
+                    id: 'demo_user',
+                    name: 'Demo User',
+                    email: 'demo@example.com'
+                }));
+                
+                // Redirect to home
+                window.location.href = 'home.html';
+            });
+            
+            // Check if dark mode is enabled
+            function checkDarkMode() {
+                const darkModeEnabled = localStorage.getItem('myMed_darkMode') === 'true';
+                const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (darkModeEnabled || (localStorage.getItem('myMed_darkMode') === null && systemPrefersDark)) {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            }
+            
+            // Initialize demo data
+            function initDemoData() {
+                if (!localStorage.getItem('myMed_demoInitialized')) {
+                    // Create demo user
+                    const demoUser = {
+                        id: 'demo_user',
+                        name: 'Demo User',
+                        email: 'demo@example.com',
+                        password: 'password123',
+                        dateCreated: new Date().toISOString()
+                    };
+                    
+                    const users = JSON.parse(localStorage.getItem('myMed_users')) || [];
+                    
+                    // Only add demo user if it doesn't already exist
+                    if (!users.some(user => user.id === 'demo_user')) {
+                        users.push(demoUser);
+                        localStorage.setItem('myMed_users', JSON.stringify(users));
+                    }
+                    
+                    // Create demo medications
+                    const medications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                    
+                    // Only add demo medications if they don't already exist
+                    if (!medications.some(med => med.id === 'med_001')) {
+                        medications.push({
+                            id: 'med_001',
+                            userId: 'demo_user',
+                            name: 'Aspirin',
+                            dosage: '325 mg',
+                            frequency: 'once-daily',
+                            times: ['08:00'],
+                            days: [],
+                            instructions: 'Take with food',
+                            supply: '30 tablets',
+                            refillReminder: true,
+                            dateAdded: new Date().toISOString(),
+                            dateUpdated: new Date().toISOString()
+                        });
+                        
+                        medications.push({
+                            id: 'med_002',
+                            userId: 'demo_user',
+                            name: 'Vitamin D',
+                            dosage: '1000 IU',
+                            frequency: 'once-daily',
+                            times: ['09:00'],
+                            days: [],
+                            instructions: 'Take with breakfast',
+                            supply: '60 capsules',
+                            refillReminder: false,
+                            dateAdded: new Date().toISOString(),
+                            dateUpdated: new Date().toISOString()
+                        });
+                        
+                        localStorage.setItem('myMed_medications', JSON.stringify(medications));
+                    }
+                    
+                    // Mark as initialized
+                    localStorage.setItem('myMed_demoInitialized', 'true');
+                }
+            }
+            
+            // Toast notification function - Updated to use translations
+            function showToast(message, type = 'info', duration = 3000) {
+                let toastContainer = document.querySelector('.toast-container');
+                
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container';
+                    document.body.appendChild(toastContainer);
+                }
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let iconClass = 'fa-info-circle';
+                if (type === 'success') iconClass = 'fa-check-circle';
+                if (type === 'error') iconClass = 'fa-exclamation-circle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="toast-message">${message}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    toast.classList.add('toast-visible');
+                }, 10);
+                
+                // Remove after duration
+                setTimeout(() => {
+                    toast.classList.remove('toast-visible');
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, duration);
+            }
+        });
+    </script>
+</body>
+</html>

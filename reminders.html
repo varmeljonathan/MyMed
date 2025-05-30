@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminders - myMed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #5D5CDE;
+            --primary-light: rgba(93, 92, 222, 0.1);
+            --primary-dark: #4847b0;
+            --text-main: #333333;
+            --text-secondary: #666666;
+            --text-light: #808080;
+            --border-color: #dddddd;
+            --card-bg: #ffffff;
+            --bg-color: #f5f5f5;
+            --section-divide: #eeeeee;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            
+            /* Dark mode colors */
+            --dark-bg: #1e1e1e;
+            --dark-card-bg: #2d2d2d;
+            --dark-text-main: #e0e0e0;
+            --dark-text-secondary: #b0b0b0;
+            --dark-text-light: #909090;
+            --dark-border-color: #444444;
+            --dark-section-divide: #3a3a3a;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .dark-mode body {
+            background-color: var(--dark-bg);
+            color: var(--dark-text-main);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 75px 20px;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-title i {
+            margin-right: 10px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 15px;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--section-divide);
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .section-action-btn {
+            font-size: 0.9rem;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .dark-mode .section-title {
+            border-bottom-color: var(--dark-section-divide);
+            color: var(--dark-text-main);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .dark-mode .card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+        
+        /* Calendar styles */
+        .calendar-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        .dark-mode .calendar-nav-btn {
+            color: var(--dark-text-main);
+        }
+        
+        .current-date-display {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        .week-days {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .day-selector {
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 0;
+            border-radius: 8px;
+        }
+        
+        .day-selector:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-mode .day-selector:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .day-name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        
+        .dark-mode .day-name {
+            color: var(--dark-text-secondary);
+        }
+        
+        .day-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 500;
+        }
+        
+        .current-day .day-number {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .selected-day .day-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Status indicator on calendar */
+        .medication-status {
+            display: flex;
+            justify-content: center;
+            margin-top: 3px;
+            height: 5px;
+        }
+        
+        .medication-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin: 0 1px;
+        }
+        
+        .medication-dot.completed {
+            background-color: var(--success-color);
+        }
+        
+        .medication-dot.missed {
+            background-color: var(--danger-color);
+        }
+        
+        .medication-dot.pending {
+            background-color: var(--warning-color);
+        }
+        
+        /* Reminders styles */
+        .reminders-list {
+            margin-top: 10px;
+        }
+        
+        .reminder-time-header {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 15px 0 5px;
+            color: var(--text-secondary);
+            padding-left: 5px;
+        }
+        
+        .dark-mode .reminder-time-header {
+            color: var(--dark-text-secondary);
+        }
+        
+        .medication-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .medication-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dark-mode .medication-item {
+            border-bottom-color: var(--dark-border-color);
+        }
+        
+        .icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .medication-item.taken .icon-container {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .medication-item.late .icon-container {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .medication-content {
+            flex: 1;
+        }
+        
+        .medication-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--text-main);
+        }
+        
+        .dark-mode .medication-name {
+            color: var(--dark-text-main);
+        }
+        
+        .medication-dosage {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .dark-mode .medication-dosage {
+            color: var(--dark-text-secondary);
+        }
+        
+        .medication-schedule {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        .dark-mode .medication-schedule {
+            color: var(--dark-text-light);
+        }
+        
+        .medication-action {
+            margin-left: 10px;
+        }
+        
+        .take-med-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .take-med-btn i {
+            margin-right: 5px;
+        }
+        
+        .take-med-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .take-med-btn.skip-btn {
+            background-color: var(--text-light);
+        }
+        
+        .take-med-btn.skip-btn:hover {
+            background-color: var(--text-secondary);
+        }
+        
+        .taken-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .skipped-badge {
+            background-color: var(--text-light);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .status-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+        
+        .dark-mode .status-time {
+            color: var(--dark-text-light);
+        }
+        
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .dark-mode .empty-state {
+            color: var(--dark-text-light);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            padding: 10px 0;
+            z-index: 100;
+        }
+        
+        .dark-mode .bottom-nav {
+            background-color: var(--dark-card-bg);
+            border-top-color: var(--dark-border-color);
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            padding: 5px 0;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .dark-mode .nav-item {
+            color: var(--dark-text-secondary);
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        
+        .nav-text {
+            font-size: 0.75rem;
+        }
+        
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .toast {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            min-width: 250px;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .toast.toast-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dark-mode .toast {
+            background-color: var(--dark-card-bg);
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .toast.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .toast-icon {
+            margin-right: 12px;
+        }
+        
+        .toast.success .toast-icon {
+            color: var(--success-color);
+        }
+        
+        .toast.error .toast-icon {
+            color: var(--danger-color);
+        }
+        
+        .toast.info .toast-icon {
+            color: var(--primary-color);
+        }
+        
+        .toast.warning .toast-icon {
+            color: var(--warning-color);
+        }
+        
+        /* Rating modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .dark-mode .modal {
+            background-color: var(--dark-card-bg);
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dark-mode .modal-header {
+            border-bottom-color: var(--dark-border-color);
+        }
+        
+        .modal-title {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .dark-mode .modal-close {
+            color: var(--dark-text-secondary);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .dark-mode .modal-footer {
+            border-top-color: var(--dark-border-color);
+        }
+        
+        .rating-container {
+            margin: 10px 0 20px;
+        }
+        
+        .rating-question {
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            margin-bottom: 10px;
+        }
+        
+        .rating-label-low {
+            text-align: left;
+            color: var(--danger-color);
+        }
+        
+        .rating-label-high {
+            text-align: right;
+            color: var(--success-color);
+        }
+        
+        .rating-buttons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .rating-btn {
+            width: calc(20% - 5px);
+            aspect-ratio: 1;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            border-radius: 50%;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dark-mode .rating-btn {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+            color: var(--dark-text-main);
+        }
+        
+        .rating-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark-mode .rating-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .rating-btn.selected {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .rating-notes {
+            margin-top: 20px;
+        }
+        
+        .rating-notes textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .rating-notes textarea {
+            background-color: var(--dark-bg);
+            border-color: var(--dark-border-color);
+            color: var(--dark-text-main);
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--text-main);
+        }
+        
+        .dark-mode .btn-secondary {
+            background-color: var(--dark-bg);
+            color: var(--dark-text-main);
+        }
+        
+        .credit-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 20px;
+            padding-bottom: 10px;
+        }
+        
+        .dark-mode .credit-footer {
+            color: var(--dark-text-light);
+        }
+        
+        /* Reminder Banner */
+        .reminder-banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100%);
+            }
+            to {
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .dark-mode .reminder-banner {
+            background-color: var(--dark-card-bg);
+        }
+        
+        .reminder-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .reminder-header i {
+            font-size: 1.2rem;
+        }
+        
+        .reminder-title {
+            font-weight: 600;
+            font-size: 1rem;
+            flex: 1;
+        }
+        
+        .reminder-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .reminder-content {
+            padding: 15px;
+        }
+        
+        .reminder-med-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .reminder-med-info {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .reminder-med-info {
+            color: var(--dark-text-secondary);
+        }
+        
+        .reminder-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .reminder-action-btn {
+            flex: 1;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .action-take {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .action-snooze {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .action-skip {
+            background-color: var(--text-light);
+            color: white;
+        }
+        
+        /* Adherence Stats */
+        .adherence-section {
+            margin-top: 30px;
+        }
+        
+        .adherence-stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .adherence-stat-card {
+            flex: 1;
+            min-width: 120px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .dark-mode .adherence-stat-card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border-color);
+        }
+        
+        .adherence-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .adherence-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .dark-mode .adherence-label {
+            color: var(--dark-text-secondary);
+        }
+        
+        .adherence-rate-good {
+            color: var(--success-color);
+        }
+        
+        .adherence-rate-warning {
+            color: var(--warning-color);
+        }
+        
+        .adherence-rate-danger {
+            color: var(--danger-color);
+        }
+        
+        .streak-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .streak-flame {
+            color: var(--danger-color);
+            font-size: 1.2rem;
+        }
+        
+        /* Snooze Menu */
+        .snooze-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .dark-mode .snooze-menu {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .snooze-menu.active {
+            display: block;
+        }
+        
+        .snooze-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .snooze-item:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .dark-mode .snooze-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <i class="fas fa-bell"></i> <span id="reminders-title">Reminders</span>
+            </h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Active Reminders Banner Container -->
+        <div id="reminder-banner-container"></div>
+        
+        <!-- Calendar Navigation -->
+        <div class="calendar-navigation">
+            <button id="prev-day-btn" class="calendar-nav-btn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div id="current-date" class="current-date-display">Today</div>
+            <button id="next-day-btn" class="calendar-nav-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Week Days -->
+        <div class="week-days">
+            <div class="day-selector" data-day="0">
+                <div class="day-name" id="day-0">Sun</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-0"></div>
+            </div>
+            <div class="day-selector" data-day="1">
+                <div class="day-name" id="day-1">Mon</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-1"></div>
+            </div>
+            <div class="day-selector" data-day="2">
+                <div class="day-name" id="day-2">Tue</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-2"></div>
+            </div>
+            <div class="day-selector" data-day="3">
+                <div class="day-name" id="day-3">Wed</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-3"></div>
+            </div>
+            <div class="day-selector" data-day="4">
+                <div class="day-name" id="day-4">Thu</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-4"></div>
+            </div>
+            <div class="day-selector" data-day="5">
+                <div class="day-name" id="day-5">Fri</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-5"></div>
+            </div>
+            <div class="day-selector" data-day="6">
+                <div class="day-name" id="day-6">Sat</div>
+                <div class="day-number"></div>
+                <div class="medication-status" id="status-6"></div>
+            </div>
+        </div>
+
+        <!-- Reminders Section -->
+        <div class="section-title">
+            <span id="med-reminders-title">Medication Reminders</span>
+            <div class="section-title-actions">
+                <button id="add-reminder-btn" class="section-action-btn">
+                    <i class="fas fa-plus"></i> <span id="add-btn-text">Add</span>
+                </button>
+            </div>
+        </div>
+        <div id="reminders-list" class="reminders-list">
+            <!-- Will be populated by JavaScript -->
+            <div class="empty-state" id="empty-reminders">
+                <p id="no-reminders-text">No reminders for this day</p>
+            </div>
+        </div>
+        
+        <!-- Adherence Stats Section -->
+        <div class="adherence-section">
+            <h2 class="section-title" id="weekly-adherence-title">Weekly Adherence</h2>
+            <div class="adherence-stats">
+                <div class="adherence-stat-card">
+                    <div id="adherence-rate" class="adherence-value">0%</div>
+                    <div class="adherence-label" id="adherence-rate-label">Adherence Rate</div>
+                </div>
+                <div class="adherence-stat-card">
+                    <div id="doses-taken" class="adherence-value">0</div>
+                    <div class="adherence-label" id="doses-taken-label">Doses Taken</div>
+                </div>
+                <div class="adherence-stat-card">
+                    <div id="current-streak" class="adherence-value">
+                        <span class="streak-container">
+                            <i class="fas fa-fire streak-flame"></i>
+                            <span id="streak-value">0</span>
+                        </span>
+                    </div>
+                    <div class="adherence-label" id="day-streak-label">Day Streak</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="credit-footer">
+            <span id="by-text">by</span> Venegda Mel
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span class="nav-text" id="nav-home-text">Home</span>
+        </a>
+        <a href="reminders.html" class="nav-item active">
+            <i class="fas fa-bell"></i>
+            <span class="nav-text" id="nav-reminders-text">Reminders</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span class="nav-text" id="nav-reports-text">Reports</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span class="nav-text" id="nav-profile-text">Profile</span>
+        </a>
+    </div>
+    
+    <!-- Rating Modal -->
+    <div class="modal-overlay" id="rating-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="rating-modal-title">How are you feeling?</h3>
+                <button class="modal-close" id="close-rating-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="rating-question">
+                    <span id="after-taking-text">After taking</span> <span id="med-name">this medication</span>, 
+                    <span id="rate-feeling-text">rate how you feel:</span>
+                </p>
+                
+                <div class="rating-container">
+                    <div class="rating-scale">
+                        <div class="rating-label-low" id="rating-not-good">Not good</div>
+                        <div class="rating-label-high" id="rating-very-good">Very good</div>
+                    </div>
+                    
+                    <div class="rating-buttons">
+                        <button class="rating-btn" data-value="0">0</button>
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                        <button class="rating-btn" data-value="6">6</button>
+                        <button class="rating-btn" data-value="7">7</button>
+                        <button class="rating-btn" data-value="8">8</button>
+                        <button class="rating-btn" data-value="9">9</button>
+                        <button class="rating-btn" data-value="10">10</button>
+                    </div>
+                </div>
+                
+                <div class="rating-notes">
+                    <label for="feeling-notes" id="additional-notes-label">Additional notes (optional):</label>
+                    <textarea id="feeling-notes" placeholder="Any symptoms or observations..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="skip-rating-btn">Skip</button>
+                <button class="btn btn-primary" id="submit-rating-btn" disabled>Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Snooze Menu Template -->
+    <div class="snooze-menu" id="snooze-menu-template">
+        <div class="snooze-item" data-time="5" id="snooze-5">Snooze for 5 minutes</div>
+        <div class="snooze-item" data-time="10" id="snooze-10">Snooze for 10 minutes</div>
+        <div class="snooze-item" data-time="15" id="snooze-15">Snooze for 15 minutes</div>
+        <div class="snooze-item" data-time="30" id="snooze-30">Snooze for 30 minutes</div>
+        <div class="snooze-item" data-time="60" id="snooze-60">Snooze for 1 hour</div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // App state
+            const app = {
+                selectedDate: new Date(),
+                reminders: [],
+                medications: [],
+                history: [],
+                activeReminders: [],
+                snoozeTimers: {},
+                language: 'en',
+                currentRating: {
+                    reminderId: null,
+                    medicationId: null,
+                    medicationName: null,
+                    selectedRating: null
+                }
+            };
+            
+            // Translations dictionary
+            const translations = {
+                en: {
+                    // Page title and navigation
+                    page_title: "Reminders - myMed",
+                    reminders: "Reminders",
+                    home: "Home",
+                    reports: "Reports",
+                    profile: "Profile",
+                    
+                    // Calendar
+                    today: "Today",
+                    days_of_week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    
+                    // Reminders Section
+                    medication_reminders: "Medication Reminders",
+                    add: "Add",
+                    no_reminders: "No reminders for this day",
+                    no_dosage: "No dosage specified",
+                    take: "Take",
+                    taken: "Taken",
+                    skipped: "Skipped",
+                    at: "at",
+                    
+                    // Adherence Stats
+                    weekly_adherence: "Weekly Adherence",
+                    adherence_rate: "Adherence Rate",
+                    doses_taken: "Doses Taken",
+                    day_streak: "Day Streak",
+                    
+                    // Rating Modal
+                    how_feeling: "How are you feeling?",
+                    after_taking: "After taking",
+                    rate_feeling: "rate how you feel:",
+                    not_good: "Not good",
+                    very_good: "Very good",
+                    additional_notes: "Additional notes (optional):",
+                    notes_placeholder: "Any symptoms or observations...",
+                    skip: "Skip",
+                    submit: "Submit",
+                    
+                    // Reminder Banner
+                    medication_reminder: "Medication Reminder",
+                    take_now: "Take Now",
+                    snooze: "Snooze",
+                    skip: "Skip",
+                    
+                    // Snooze options
+                    snooze_5: "Snooze for 5 minutes",
+                    snooze_10: "Snooze for 10 minutes",
+                    snooze_15: "Snooze for 15 minutes",
+                    snooze_30: "Snooze for 30 minutes",
+                    snooze_60: "Snooze for 1 hour",
+                    
+                    // Toast messages
+                    reminder_not_found: "Reminder not found",
+                    medication_skipped: "Medication skipped",
+                    error_skipping: "Error skipping medication",
+                    medication_taken: "Medication marked as taken",
+                    error_taking: "Error marking medication as taken",
+                    feeling_saved: "Feeling rating saved",
+                    error_saving_feeling: "Error saving feeling rating",
+                    reminder_snoozed: "Reminder snoozed for {minutes} minutes",
+                    
+                    // Footer
+                    by: "by"
+                },
+                fr: {
+                    // Page title and navigation
+                    page_title: "Rappels - myMed",
+                    reminders: "Rappels",
+                    home: "Accueil",
+                    reports: "Rapports",
+                    profile: "Profil",
+                    
+                    // Calendar
+                    today: "Aujourd'hui",
+                    days_of_week: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+                    months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+                    
+                    // Reminders Section
+                    medication_reminders: "Rappels de Médicaments",
+                    add: "Ajouter",
+                    no_reminders: "Pas de rappels pour ce jour",
+                    no_dosage: "Aucun dosage spécifié",
+                    take: "Prendre",
+                    taken: "Pris",
+                    skipped: "Ignoré",
+                    at: "à",
+                    
+                    // Adherence Stats
+                    weekly_adherence: "Adhésion Hebdomadaire",
+                    adherence_rate: "Taux d'Adhésion",
+                    doses_taken: "Doses Prises",
+                    day_streak: "Jours Consécutifs",
+                    
+                    // Rating Modal
+                    how_feeling: "Comment vous sentez-vous?",
+                    after_taking: "Après avoir pris",
+                    rate_feeling: "évaluez comment vous vous sentez:",
+                    not_good: "Pas bien",
+                    very_good: "Très bien",
+                    additional_notes: "Notes supplémentaires (optionnel):",
+                    notes_placeholder: "Symptômes ou observations...",
+                    skip: "Ignorer",
+                    submit: "Soumettre",
+                    
+                    // Reminder Banner
+                    medication_reminder: "Rappel de Médicament",
+                    take_now: "Prendre Maintenant",
+                    snooze: "Reporter",
+                    skip: "Ignorer",
+                    
+                    // Snooze options
+                    snooze_5: "Reporter de 5 minutes",
+                    snooze_10: "Reporter de 10 minutes",
+                    snooze_15: "Reporter de 15 minutes",
+                    snooze_30: "Reporter de 30 minutes",
+                    snooze_60: "Reporter de 1 heure",
+                    
+                    // Toast messages
+                    reminder_not_found: "Rappel non trouvé",
+                    medication_skipped: "Médicament ignoré",
+                    error_skipping: "Erreur lors de l'ignorement du médicament",
+                    medication_taken: "Médicament marqué comme pris",
+                    error_taking: "Erreur lors du marquage du médicament comme pris",
+                    feeling_saved: "Évaluation du ressenti enregistrée",
+                    error_saving_feeling: "Erreur lors de l'enregistrement de l'évaluation",
+                    reminder_snoozed: "Rappel reporté de {minutes} minutes",
+                    
+                    // Footer
+                    by: "par"
+                }
+            };
+            
+            // Initialize the app
+            init();
+            
+            // Start checking for reminders
+            setInterval(checkReminders, 30000); // Check every 30 seconds
+            setTimeout(checkReminders, 2000); // Initial check after 2 seconds
+            
+            function init() {
+                console.log("Initializing reminders page...");
+                
+                // Load language preference
+                loadLanguagePreference();
+                
+                // Apply translations
+                applyTranslations();
+                
+                // Check if user is logged in
+                if (!isUserLoggedIn()) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Check for dark mode
+                checkDarkMode();
+                
+                // Reset selected date to today and clear time
+                app.selectedDate = new Date();
+                app.selectedDate.setHours(0, 0, 0, 0);
+                
+                // Load reminders and other data
+                loadData();
+                
+                // Initialize calendar
+                initializeCalendar();
+                
+                // Display reminders for today
+                displayReminders(app.selectedDate);
+                
+                // Update adherence stats
+                updateAdherenceStats();
+                
+                // Set up event listeners
+                setupEventListeners();
+            }
+            
+            // Load language preference from localStorage
+            function loadLanguagePreference() {
+                try {
+                    const savedLang = localStorage.getItem('myMed_language');
+                    if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
+                        app.language = savedLang;
+                        console.log("Loaded language preference:", app.language);
+                        
+                        // Set HTML lang attribute
+                        document.documentElement.lang = app.language;
+                    }
+                } catch (error) {
+                    console.error("Error loading language preference:", error);
+                }
+            }
+            
+            // Apply translations to the UI
+            function applyTranslations() {
+                const lang = app.language;
+                console.log("Applying translations for language:", lang);
+                
+                // Update page title
+                document.title = translations[lang].page_title;
+                
+                // Update header
+                document.getElementById('reminders-title').textContent = translations[lang].reminders;
+                
+                // Update navigation
+                document.getElementById('nav-home-text').textContent = translations[lang].home;
+                document.getElementById('nav-reminders-text').textContent = translations[lang].reminders;
+                document.getElementById('nav-reports-text').textContent = translations[lang].reports;
+                document.getElementById('nav-profile-text').textContent = translations[lang].profile;
+                
+                // Update day names
+                for (let i = 0; i < 7; i++) {
+                    document.getElementById(`day-${i}`).textContent = translations[lang].days_of_week[i];
+                }
+                
+                // Update section titles
+                document.getElementById('med-reminders-title').textContent = translations[lang].medication_reminders;
+                document.getElementById('add-btn-text').textContent = translations[lang].add;
+                document.getElementById('no-reminders-text').textContent = translations[lang].no_reminders;
+                document.getElementById('weekly-adherence-title').textContent = translations[lang].weekly_adherence;
+                
+                // Update adherence stats
+                document.getElementById('adherence-rate-label').textContent = translations[lang].adherence_rate;
+                document.getElementById('doses-taken-label').textContent = translations[lang].doses_taken;
+                document.getElementById('day-streak-label').textContent = translations[lang].day_streak;
+                
+                // Update rating modal
+                document.getElementById('rating-modal-title').textContent = translations[lang].how_feeling;
+                document.getElementById('after-taking-text').textContent = translations[lang].after_taking;
+                document.getElementById('rate-feeling-text').textContent = translations[lang].rate_feeling;
+                document.getElementById('rating-not-good').textContent = translations[lang].not_good;
+                document.getElementById('rating-very-good').textContent = translations[lang].very_good;
+                document.getElementById('additional-notes-label').textContent = translations[lang].additional_notes;
+                document.getElementById('feeling-notes').placeholder = translations[lang].notes_placeholder;
+                document.getElementById('skip-rating-btn').textContent = translations[lang].skip;
+                document.getElementById('submit-rating-btn').textContent = translations[lang].submit;
+                
+                // Update snooze menu items
+                document.getElementById('snooze-5').textContent = translations[lang].snooze_5;
+                document.getElementById('snooze-10').textContent = translations[lang].snooze_10;
+                document.getElementById('snooze-15').textContent = translations[lang].snooze_15;
+                document.getElementById('snooze-30').textContent = translations[lang].snooze_30;
+                document.getElementById('snooze-60').textContent = translations[lang].snooze_60;
+                
+                // Update footer
+                document.getElementById('by-text').textContent = translations[lang].by;
+            }
+            
+            // Check if user is logged in
+            function isUserLoggedIn() {
+                return sessionStorage.getItem('myMed_currentUser') !== null;
+            }
+            
+            // Load all data from localStorage
+            function loadData() {
+                // Get current user
+                const currentUser = JSON.parse(sessionStorage.getItem('myMed_currentUser'));
+                if (!currentUser) return;
+                
+                // Load reminders
+                try {
+                    const storedReminders = JSON.parse(localStorage.getItem('myMed_reminders')) || [];
+                    app.reminders = storedReminders.filter(rem => rem.userId === currentUser.id);
+                } catch (e) {
+                    console.error('Error loading reminders:', e);
+                    app.reminders = [];
+                }
+                
+                // Load medications
+                try {
+                    const storedMedications = JSON.parse(localStorage.getItem('myMed_medications')) || [];
+                    app.medications = storedMedications;
+                } catch (e) {
+                    console.error('Error loading medications:', e);
+                    app.medications = [];
+                }
+                
+                // Load history
+                try {
+                    const storedHistory = JSON.parse(localStorage.getItem('myMed_medication_history')) || [];
+                    app.history = storedHistory.filter(entry => entry.userId === currentUser.id);
+                } catch (e) {
+                    console.error('Error loading history:', e);
+                    app.history = [];
+                }
+            }
+            
+            // Check dark mode
+            function checkDarkMode() {
+                const darkModeEnabled = localStorage.getItem('myMed_darkMode') === 'true';
+                const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (darkModeEnabled || (localStorage.getItem('myMed_darkMode') === null && systemPrefersDark)) {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            }
+            
+            // Setup event listeners
+            function setupEventListeners() {
+                // Calendar navigation
+                document.getElementById('prev-day-btn').addEventListener('click', function() {
+                    app.selectedDate.setDate(app.selectedDate.getDate() - 1);
+                    updateCalendarUI();
+                    displayReminders(app.selectedDate);
+                });
+                
+                document.getElementById('next-day-btn').addEventListener('click', function() {
+                    app.selectedDate.setDate(app.selectedDate.getDate() + 1);
+                    updateCalendarUI();
+                    displayReminders(app.selectedDate);
+                });
+                
+                // Day selectors
+                document.querySelectorAll('.day-selector').forEach(daySelector => {
+                    daySelector.addEventListener('click', function() {
+                        const dayOfWeek = parseInt(this.dataset.day);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        // Calculate selected date based on current week
+                        const firstDayOfWeek = new Date(today);
+                        const currentDayOfWeek = today.getDay();
+                        firstDayOfWeek.setDate(today.getDate() - currentDayOfWeek);
+                        
+                        app.selectedDate = new Date(firstDayOfWeek);
+                        app.selectedDate.setDate(firstDayOfWeek.getDate() + dayOfWeek);
+                        
+                        updateCalendarUI();
+                        displayReminders(app.selectedDate);
+                    });
+                });
+                
+                // Add reminder button
+                document.getElementById('add-reminder-btn').addEventListener('click', function() {
+                    // Redirect to home page for adding medications/reminders
+                    window.location.href = 'home.html';
+                });
+                
+                // Rating modal setup
+                setupRatingModal();
+            }
+            
+            // Initialize calendar UI
+            function initializeCalendar() {
+                updateCalendarUI();
+                updateMedicationStatus();
+            }
+            
+            // Update calendar UI
+            function updateCalendarUI() {
+                // Update current date display
+                const currentDateEl = document.getElementById('current-date');
+                
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (app.selectedDate.getTime() === today.getTime()) {
+                    currentDateEl.textContent = translations[app.language].today;
+                } else {
+                    // Format date based on language
+                    if (app.language === 'fr') {
+                        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                        currentDateEl.textContent = app.selectedDate.toLocaleDateString('fr-FR', options);
+                    } else {
+                        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+                        currentDateEl.textContent = app.selectedDate.toLocaleDateString('en-US', options);
+                    }
+                }
+                
+                // Update week days
+                const firstDayOfWeek = new Date(app.selectedDate);
+                const dayOfWeek = app.selectedDate.getDay();
+                firstDayOfWeek.setDate(app.selectedDate.getDate() - dayOfWeek);
+                
+                document.querySelectorAll('.day-selector').forEach((daySelector, index) => {
+                    const date = new Date(firstDayOfWeek);
+                    date.setDate(firstDayOfWeek.getDate() + index);
+                    
+                    const dayNumberEl = daySelector.querySelector('.day-number');
+                    dayNumberEl.textContent = date.getDate();
+                    
+                    // Clear all classes first
+                    daySelector.classList.remove('current-day', 'selected-day');
+                    
+                    // Highlight today
+                    if (date.getTime() === today.getTime()) {
+                        daySelector.classList.add('current-day');
+                    }
+                    
+                    // Highlight selected day
+                    if (date.getTime() === app.selectedDate.getTime()) {
+                        daySelector.classList.add('selected-day');
+                    }
+                });
+                
+                // Update medication status indicators
+                updateMedicationStatus();
+            }
+            
+            // Update medication status indicators for each day
+            function updateMedicationStatus() {
+                const firstDayOfWeek = new Date(app.selectedDate);
+                const dayOfWeek = app.selectedDate.getDay();
+                firstDayOfWeek.setDate(app.selectedDate.getDate() - dayOfWeek);
+                
+                // Clear existing status indicators
+                for (let i = 0; i < 7; i++) {
+                    const statusEl = document.getElementById(`status-${i}`);
+                    statusEl.innerHTML = '';
+                }
+                
+                // Loop through each day of the week
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(firstDayOfWeek);
+                    date.setDate(firstDayOfWeek.getDate() + i);
+                    
+                    // Get reminders for this day
+                    const dayReminders = getRemindersForDate(date);
+                    
+                    // Skip if no reminders
+                    if (dayReminders.length === 0) continue;
+                    
+                    // Calculate status counts
+                    let taken = 0;
+                    let missed = 0;
+                    let pending = 0;
+                    
+                    dayReminders.forEach(reminder => {
+                        const reminderTime = new Date(reminder.time);
+                        const now = new Date();
+                        
+                        if (reminder.taken) {
+                            taken++;
+                        } else if (reminderTime < now) {
+                            missed++;
+                        } else {
+                            pending++;
+                        }
+                    });
+                    
+                    // Update status indicator
+                    const statusEl = document.getElementById(`status-${i}`);
+                    
+                    // Add status dots based on counts (max 3 dots)
+                    for (let j = 0; j < Math.min(taken, 3); j++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'medication-dot completed';
+                        statusEl.appendChild(dot);
+                    }
+                    
+                    for (let j = 0; j < Math.min(missed, 3); j++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'medication-dot missed';
+                        statusEl.appendChild(dot);
+                    }
+                    
+                    for (let j = 0; j < Math.min(pending, 3); j++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'medication-dot pending';
+                        statusEl.appendChild(dot);
+                    }
+                }
+            }
+            
+            // Display reminders for selected date
+            function displayReminders(date) {
+                const remindersList = document.getElementById('reminders-list');
+                const emptyReminders = document.getElementById('empty-reminders');
+                
+                // Get all reminders
+                const reminders = getRemindersForDate(date);
+                
+                // Clear existing reminders (except empty message)
+                Array.from(remindersList.children).forEach(child => {
+                    if (child !== emptyReminders) {
+                        child.remove();
+                    }
+                });
+                
+                // Display empty message if no reminders
+                if (reminders.length === 0) {
+                    emptyReminders.style.display = 'block';
+                    return;
+                }
+                
+                // Hide empty message
+                emptyReminders.style.display = 'none';
+                
+                // Group reminders by hour
+                const remindersByHour = {};
+                
+                reminders.forEach(reminder => {
+                    const reminderTime = new Date(reminder.time);
+                    const hour = reminderTime.getHours();
+                    if (!remindersByHour[hour]) {
+                        remindersByHour[hour] = [];
+                    }
+                    remindersByHour[hour].push(reminder);
+                });
+                
+                // Sort hours
+                const sortedHours = Object.keys(remindersByHour).sort((a, b) => parseInt(a) - parseInt(b));
+                
+                // Create reminder items grouped by hour
+                sortedHours.forEach(hour => {
+                    // Create hour header
+                    const hourInt = parseInt(hour);
+                    let displayHour = hourInt;
+                    let period = 'AM';
+                    
+                    if (hourInt >= 12) {
+                        period = 'PM';
+                        if (hourInt > 12) {
+                            displayHour = hourInt - 12;
+                        }
+                    } else if (hourInt === 0) {
+                        displayHour = 12;
+                    }
+                    
+                    // Format time based on language
+                    let timeDisplay;
+                    if (app.language === 'fr') {
+                        // Use 24-hour format for French
+                        timeDisplay = `${hourInt}:00`;
+                    } else {
+                        // Use 12-hour format with AM/PM for English
+                        timeDisplay = `${displayHour}:00 ${period}`;
+                    }
+                    
+                    const timeHeaderEl = document.createElement('div');
+                    timeHeaderEl.className = 'reminder-time-header';
+                    timeHeaderEl.textContent = timeDisplay;
+                    remindersList.appendChild(timeHeaderEl);
+                    
+                    // Sort reminders by minute
+                    const sortedReminders = remindersByHour[hour].sort((a, b) => {
+                        const timeA = new Date(a.time);
+                        const timeB = new Date(b.time);
+                        return timeA.getMinutes() - timeB.getMinutes();
+                    });
+                    
+                    // Create cards for each reminder
+                    sortedReminders.forEach(reminder => {
+                        // Get the associated medication
+                        const medication = getMedicationById(reminder.medicationId);
+                        if (!medication) return;
+                        
+                        const reminderTime = new Date(reminder.time);
+                        const now = new Date();
+                        const isPastDue = reminderTime < now && !reminder.taken;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        
+                        let statusHtml = '';
+                        let actionHtml = '';
+                        
+                        if (reminder.taken) {
+                            // Display taken information
+                            const takenTime = reminder.takenAt ? formatTime(new Date(reminder.takenAt)) : '';
+                            statusHtml = `
+                                <span class="taken-badge">${translations[app.language].taken}</span>
+                                ${takenTime ? `<div class="status-time">${translations[app.language].at} ${takenTime}</div>` : ''}
+                            `;
+                        } else if (reminder.skipped) {
+                            // Display skipped information
+                            statusHtml = `
+                                <span class="skipped-badge">${translations[app.language].skipped}</span>
+                                ${reminder.skippedAt ? `<div class="status-time">${translations[app.language].at} ${formatTime(new Date(reminder.skippedAt))}</div>` : ''}
+                            `;
+                        } else {
+                            // Display action buttons
+                            actionHtml = `
+                                <button class="take-med-btn" data-id="${reminder.id}" data-med-id="${medication.id}" data-name="${medication.name}">
+                                    <i class="fas fa-check"></i> ${translations[app.language].take}
+                                </button>
+                                <button class="take-med-btn skip-btn" data-id="${reminder.id}" data-action="skip">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            `;
+                        }
+                        
+                        card.innerHTML = `
+                            <div class="medication-item ${reminder.taken ? 'taken' : ''} ${isPastDue ? 'late' : ''}">
+                                <div class="icon-container">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <div class="medication-content">
+                                    <div class="medication-name">${medication.name}</div>
+                                    <div class="medication-dosage">${medication.dosage || translations[app.language].no_dosage}</div>
+                                    <div class="medication-schedule">${formatTime(reminderTime)}</div>
+                                </div>
+                                <div class="medication-action">
+                                    ${reminder.taken || reminder.skipped ? statusHtml : actionHtml}
+                                </div>
+                            </div>
+                        `;
+                        
+                        remindersList.appendChild(card);
+                    });
+                });
+                
+                // Add event listeners to action buttons
+                setupActionButtons();
+            }
+            
+            // Setup action buttons (take/skip)
+            function setupActionButtons() {
+                // Take medication buttons
+                document.querySelectorAll('.take-med-btn:not(.skip-btn)').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const reminderId = this.dataset.id;
+                        const medId = this.dataset.medId;
+                        const medName = this.dataset.name;
+                        takeMedication(reminderId, medId, medName);
+                    });
+                });
+                
+                // Skip medication buttons
+                document.querySelectorAll('.take-med-btn.skip-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const reminderId = this.dataset.id;
+                        skipMedication(reminderId);
+                    });
+                });
+            }
+            
+            // Get reminders for specific date
+            function getRemindersForDate(date) {
+                try {
+                    // Filter reminders for selected date
+                    const startOfDay = new Date(date);
+                    startOfDay.setHours(0, 0, 0, 0);
+                    
+                    const endOfDay = new Date(date);
+                    endOfDay.setHours(23, 59, 59, 999);
+                    
+                    const dateReminders = app.reminders.filter(reminder => {
+                        const reminderTime = new Date(reminder.time);
+                        return reminderTime >= startOfDay && reminderTime <= endOfDay;
+                    });
+                    
+                    // Sort by time
+                    return dateReminders.sort((a, b) => new Date(a.time) - new Date(b.time));
+                } catch (err) {
+                    console.error('Error getting reminders for date:', err);
+                    showToast(translations[app.language].reminder_not_found, 'error');
+                    return [];
+                }
+            }
+            
+            // Get medication by ID
+            function getMedicationById(medicationId) {
+                return app.medications.find(med => med.id === medicationId);
+            }
+            
+            // Mark medication as taken
+            function takeMedication(reminderId, medicationId, medicationName) {
+                // Store current rating data
+                app.currentRating = {
+                    reminderId: reminderId,
+                    medicationId: medicationId,
+                    medicationName: medicationName,
+                    selectedRating: null
+                };
+                
+                // Mark medication as taken
+                const result = markMedicationAsTaken(reminderId);
+                
+                if (result.success) {
+                    // Update app state
+                    loadData();
+                    displayReminders(app.selectedDate);
+                    updateMedicationStatus();
+                    updateAdherenceStats();
+                    
+                    // Remove from active reminders if exists
+                    removeActiveReminder(reminderId);
+                    
+                    // Show feeling rating modal
+                    setTimeout(() => {
+                        showRatingModal(medicationName);
+                    }, 500);
+                }
+            }
+            
+            // Skip medication
+            function skipMedication(reminderId) {
+                try {
+                    // Get reminders from localStorage
+                    const reminders = JSON.parse(localStorage.getItem('myMed_reminders')) || [];
+                    const reminderIndex = reminders.findIndex(rem => rem.id === reminderId);
+                    
+                    if (reminderIndex === -1) {
+                        showToast(translations[app.language].reminder_not_found, 'error');
+                        return { success: false, message: 'Reminder not found' };
+                    }
+                    
+                    // Mark as skipped
+                    reminders[reminderIndex].skipped = true;
+                    reminders[reminderIndex].skippedAt = new Date().toISOString();
+                    
+                    // Save to localStorage
+                    localStorage.setItem('myMed_reminders', JSON.stringify(reminders));
+                    
+                    // Remove from active reminders if exists
+                    removeActiveReminder(reminderId);
+                    
+                    // Show success message
+                    showToast(translations[app.language].medication_skipped, 'info');
+                    
+                    // Refresh the display
+                    loadData();
+                    displayReminders(app.selectedDate);
+                    updateMedicationStatus();
+                    updateAdherenceStats();
+                    
+                    return { success: true, message: 'Medication skipped' };
+                } catch (err) {
+                    console.error('Error skipping medication:', err);
+                    showToast(translations[app.language].error_skipping, 'error');
+                    return { success: false, message: 'Error skipping medication' };
+                }
+            }
+            
+            // Mark medication as taken
+            function markMedicationAsTaken(reminderId) {
+                try {
+                    // Get reminders from localStorage
+                    const reminders = JSON.parse(localStorage.getItem('myMed_reminders')) || [];
+                    const reminderIndex = reminders.findIndex(rem => rem.id === reminderId);
+                    
+                    if (reminderIndex === -1) {
+                        showToast(translations[app.language].reminder_not_found, 'error');
+                        return { success: false, message: 'Reminder not found' };
+                    }
+                    
+                    // Mark as taken
+                    reminders[reminderIndex].taken = true;
+                    reminders[reminderIndex].takenAt = new Date().toISOString();
+                    
+                    // Save to localStorage
+                    localStorage.setItem('myMed_reminders', JSON.stringify(reminders));
+                    
+                    // Add to medication history
+                    addToMedicationHistory(reminders[reminderIndex]);
+                    
+                    // Show success message
+                    showToast(translations[app.language].medication_taken, 'success');
+                    
+                    return { success: true, message: 'Medication marked as taken' };
+                } catch (err) {
+                    console.error('Error marking medication as taken:', err);
+                    showToast(translations[app.language].error_taking, 'error');
+                    return { success: false, message: 'Error marking medication as taken' };
+                }
+            }
+            
+            // Add to medication history
+            function addToMedicationHistory(reminder) {
+                try {
+                    const history = JSON.parse(localStorage.getItem('myMed_medication_history')) || [];
+                    
+                    const historyEntry = {
+                        id: 'hist_' + Date.now(),
+                        userId: reminder.userId,
+                        medicationId: reminder.medicationId,
+                        reminderId: reminder.id,
+                        takenAt: reminder.takenAt || new Date().toISOString(),
+                        scheduledTime: reminder.time
+                    };
+                    
+                    history.push(historyEntry);
+                    localStorage.setItem('myMed_medication_history', JSON.stringify(history));
+                } catch (err) {
+                    console.error('Error adding to medication history:', err);
+                }
+            }
+            
+            // Set up rating modal
+            function setupRatingModal() {
+                // Set up rating buttons
+                const ratingButtons = document.querySelectorAll('.rating-btn');
+                ratingButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // Remove selected class from all buttons
+                        ratingButtons.forEach(b => b.classList.remove('selected'));
+                        
+                        // Add selected class to clicked button
+                        this.classList.add('selected');
+                        
+                        // Store selected rating
+                        app.currentRating.selectedRating = parseInt(this.dataset.value);
+                        
+                        // Enable submit button
+                        document.getElementById('submit-rating-btn').disabled = false;
+                    });
+                });
+                
+                // Submit rating
+                document.getElementById('submit-rating-btn').addEventListener('click', function() {
+                    if (app.currentRating.selectedRating !== null && 
+                        app.currentRating.reminderId && 
+                        app.currentRating.medicationId) {
+                        
+                        const notes = document.getElementById('feeling-notes').value;
+                        saveFeelingRating(
+                            app.currentRating.reminderId, 
+                            app.currentRating.medicationId, 
+                            app.currentRating.selectedRating, 
+                            notes
+                        );
+                        closeRatingModal();
+                    }
+                });
+                
+                // Skip rating
+                document.getElementById('skip-rating-btn').addEventListener('click', closeRatingModal);
+                
+                // Close button
+                document.getElementById('close-rating-btn').addEventListener('click', closeRatingModal);
+            }
+            
+            // Show rating modal
+            function showRatingModal(medicationName) {
+                // Reset modal state
+                app.currentRating.selectedRating = null;
+                document.getElementById('feeling-notes').value = '';
+                document.getElementById('submit-rating-btn').disabled = true;
+                document.getElementById('med-name').textContent = medicationName || 'this medication';
+                document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                
+                // Show modal
+                document.getElementById('rating-modal').classList.add('active');
+            }
+            
+            // Close rating modal
+            function closeRatingModal() {
+                document.getElementById('rating-modal').classList.remove('active');
+            }
+            
+            // Save feeling rating
+            function saveFeelingRating(reminderId, medicationId, rating, notes) {
+                try {
+                    // Get the medication history
+                    const medicationHistory = JSON.parse(localStorage.getItem('myMed_medication_history')) || [];
+                    
+                    // Find the history entry for this reminder
+                    const historyEntry = medicationHistory.find(entry => entry.reminderId === reminderId);
+                    
+                    if (!historyEntry) {
+                        // Create a new entry if none exists
+                        const reminders = JSON.parse(localStorage.getItem('myMed_reminders')) || [];
+                        const reminder = reminders.find(r => r.id === reminderId);
+                        
+                        if (!reminder) {
+                            console.error('Reminder not found for rating');
+                            return;
+                        }
+                        
+                        const newEntry = {
+                            id: 'hist_' + Date.now(),
+                            userId: reminder.userId,
+                            medicationId: medicationId,
+                            reminderId: reminderId,
+                            takenAt: reminder.takenAt || new Date().toISOString(),
+                            scheduledTime: reminder.time,
+                            feeling: {
+                                rating: rating,
+                                notes: notes || '',
+                                recordedAt: new Date().toISOString()
+                            }
+                        };
+                        
+                        medicationHistory.push(newEntry);
+                    } else {
+                        // Update existing entry
+                        historyEntry.feeling = {
+                            rating: rating,
+                            notes: notes || '',
+                            recordedAt: new Date().toISOString()
+                        };
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('myMed_medication_history', JSON.stringify(medicationHistory));
+                    
+                    showToast(translations[app.language].feeling_saved, 'success');
+                } catch (err) {
+                    console.error('Error saving feeling rating:', err);
+                    showToast(translations[app.language].error_saving_feeling, 'error');
+                }
+            }
+            
+            // Update adherence stats
+            function updateAdherenceStats() {
+                // Get stats for the current week
+                const weekStats = getWeeklyAdherenceStats();
+                
+                // Update UI
+                document.getElementById('adherence-rate').textContent = `${weekStats.adherenceRate}%`;
+                document.getElementById('doses-taken').textContent = weekStats.dosesTaken;
+                document.getElementById('streak-value').textContent = weekStats.streak;
+                
+                // Add color class based on adherence rate
+                const adherenceEl = document.getElementById('adherence-rate');
+                adherenceEl.className = 'adherence-value';
+                
+                if (weekStats.adherenceRate >= 80) {
+                    adherenceEl.classList.add('adherence-rate-good');
+                } else if (weekStats.adherenceRate >= 50) {
+                    adherenceEl.classList.add('adherence-rate-warning');
+                } else if (weekStats.adherenceRate > 0) {
+                    adherenceEl.classList.add('adherence-rate-danger');
+                }
+            }
+            
+            // Get weekly adherence stats
+            function getWeeklyAdherenceStats() {
+                // Calculate start of week (Sunday)
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const dayOfWeek = today.getDay();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - dayOfWeek);
+                
+                // Calculate end of week (Saturday)
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
+                endOfWeek.setHours(23, 59, 59, 999);
+                
+                // Filter reminders for this week
+                const weekReminders = app.reminders.filter(reminder => {
+                    const reminderTime = new Date(reminder.time);
+                    return reminderTime >= startOfWeek && reminderTime <= endOfWeek && reminderTime <= now;
+                });
+                
+                // Calculate stats
+                const totalDoses = weekReminders.length;
+                const dosesTaken = weekReminders.filter(r => r.taken).length;
+                const adherenceRate = totalDoses > 0 ? Math.round((dosesTaken / totalDoses) * 100) : 0;
+                
+                // Calculate streak (consecutive days with all doses taken)
+                const streak = calculateStreak();
+                
+                return {
+                    adherenceRate,
+                    dosesTaken,
+                    dosesMissed: totalDoses - dosesTaken,
+                    streak
+                };
+            }
+            
+            // Calculate streak (consecutive days with all doses taken)
+            function calculateStreak() {
+                // Get current user
+                const currentUser = JSON.parse(sessionStorage.getItem('myMed_currentUser'));
+                if (!currentUser) return 0;
+                
+                // Start from yesterday to calculate streak (today may have pending doses)
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                yesterday.setHours(0, 0, 0, 0);
+                
+                let streak = 0;
+                let currentDate = new Date(yesterday);
+                
+                while (true) {
+                    // Get all reminders for this day
+                    const dayStart = new Date(currentDate);
+                    dayStart.setHours(0, 0, 0, 0);
+                    
+                    const dayEnd = new Date(currentDate);
+                    dayEnd.setHours(23, 59, 59, 999);
+                    
+                    const dayReminders = app.reminders.filter(reminder => {
+                        const reminderTime = new Date(reminder.time);
+                        return reminderTime >= dayStart && reminderTime <= dayEnd;
+                    });
+                    
+                    // If no reminders for this day, or any reminder was missed, break streak
+                    if (dayReminders.length === 0 || !dayReminders.every(r => r.taken || r.skipped)) {
+                        break;
+                    }
+                    
+                    // If all reminders taken, increment streak
+                    streak++;
+                    
+                    // Move to previous day
+                    currentDate.setDate(currentDate.getDate() - 1);
+                }
+                
+                return streak;
+            }
+            
+            // Check for due reminders
+            function checkReminders() {
+                const currentUser = JSON.parse(sessionStorage.getItem('myMed_currentUser'));
+                if (!currentUser) return;
+                
+                const now = new Date();
+                const twentyMinutesAgo = new Date(now);
+                twentyMinutesAgo.setMinutes(now.getMinutes() - 20);
+                
+                // Get reminders that are due within the last 20 minutes and not taken/skipped
+                const dueReminders = app.reminders.filter(reminder => {
+                    const reminderTime = new Date(reminder.time);
+                    return reminderTime <= now && 
+                           reminderTime >= twentyMinutesAgo && 
+                           !reminder.taken && 
+                           !reminder.skipped && 
+                           !app.activeReminders.includes(reminder.id);
+                });
+                
+                // Show notifications for due reminders
+                dueReminders.forEach(reminder => {
+                    const medication = getMedicationById(reminder.medicationId);
+                    if (medication) {
+                        showReminderNotification(reminder, medication);
+                    }
+                });
+            }
+            
+            // Show reminder notification
+            function showReminderNotification(reminder, medication) {
+                // Add to active reminders list
+                if (!app.activeReminders.includes(reminder.id)) {
+                    app.activeReminders.push(reminder.id);
+                }
+                
+                // Create banner container if not exists
+                let bannerContainer = document.getElementById('reminder-banner-container');
+                if (!bannerContainer) {
+                    bannerContainer = document.createElement('div');
+                    bannerContainer.id = 'reminder-banner-container';
+                    document.body.appendChild(bannerContainer);
+                }
+                
+                // Format time
+                const reminderTime = new Date(reminder.time);
+                const timeString = formatTime(reminderTime);
+                
+                // Create banner HTML
+                const bannerHtml = `
+                    <div class="reminder-banner" data-id="${reminder.id}">
+                        <div class="reminder-header">
+                            <i class="fas fa-bell"></i>
+                            <div class="reminder-title">${translations[app.language].medication_reminder}</div>
+                            <button class="reminder-close" data-id="${reminder.id}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="reminder-content">
+                            <div class="reminder-med-name">${medication.name}</div>
+                            <div class="reminder-med-info">
+                                ${medication.dosage || translations[app.language].no_dosage} • ${timeString}
+                            </div>
+                            <div class="reminder-actions">
+                                <button class="reminder-action-btn action-take" data-id="${reminder.id}" data-med-id="${medication.id}" data-name="${medication.name}">
+                                    <i class="fas fa-check"></i> ${translations[app.language].take_now}
+                                </button>
+                                <button class="reminder-action-btn action-snooze" data-id="${reminder.id}">
+                                    <i class="fas fa-clock"></i> ${translations[app.language].snooze}
+                                </button>
+                                <button class="reminder-action-btn action-skip" data-id="${reminder.id}">
+                                    <i class="fas fa-times"></i> ${translations[app.language].skip}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                bannerContainer.insertAdjacentHTML('beforeend', bannerHtml);
+                
+                // Show notification sound or vibration
+                notifyUser();
+                
+                // Set up event listeners for banner
+                setupBannerEventListeners(reminder.id, medication.id, medication.name);
+            }
+            
+            // Set up event listeners for reminder banner
+            function setupBannerEventListeners(reminderId, medicationId, medicationName) {
+                // Close banner
+                const closeBtn = document.querySelector(`.reminder-close[data-id="${reminderId}"]`);
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        removeReminderBanner(reminderId);
+                    });
+                }
+                
+                // Take button
+                const takeBtn = document.querySelector(`.action-take[data-id="${reminderId}"]`);
+                if (takeBtn) {
+                    takeBtn.addEventListener('click', function() {
+                        takeMedication(reminderId, medicationId, medicationName);
+                        removeReminderBanner(reminderId);
+                    });
+                }
+                
+                // Snooze button
+                const snoozeBtn = document.querySelector(`.action-snooze[data-id="${reminderId}"]`);
+                if (snoozeBtn) {
+                    snoozeBtn.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                        
+                        // Clone the snooze menu template
+                        const snoozeMenu = document.getElementById('snooze-menu-template').cloneNode(true);
+                        snoozeMenu.id = `snooze-menu-${reminderId}`;
+                        snoozeMenu.style.position = 'absolute';
+                        snoozeMenu.style.top = (this.offsetTop + this.offsetHeight) + 'px';
+                        snoozeMenu.style.left = this.offsetLeft + 'px';
+                        snoozeMenu.classList.add('active');
+                        
+                        // Update snooze menu text with translations
+                        snoozeMenu.querySelectorAll('.snooze-item').forEach(item => {
+                            const minutes = item.getAttribute('data-time');
+                            item.textContent = translations[app.language][`snooze_${minutes}`];
+                        });
+                        
+                        document.body.appendChild(snoozeMenu);
+                        
+                        // Set up snooze options
+                        snoozeMenu.querySelectorAll('.snooze-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const snoozeMinutes = parseInt(this.dataset.time);
+                                snoozeReminder(reminderId, snoozeMinutes);
+                                removeReminderBanner(reminderId);
+                                snoozeMenu.remove();
+                            });
+                        });
+                        
+                        // Close menu when clicking outside
+                        document.addEventListener('click', function closeSnoozeMenu() {
+                            snoozeMenu.remove();
+                            document.removeEventListener('click', closeSnoozeMenu);
+                        });
+                    });
+                }
+                
+                // Skip button
+                const skipBtn = document.querySelector(`.action-skip[data-id="${reminderId}"]`);
+                if (skipBtn) {
+                    skipBtn.addEventListener('click', function() {
+                        skipMedication(reminderId);
+                        removeReminderBanner(reminderId);
+                    });
+                }
+            }
+            
+            // Remove reminder banner
+            function removeReminderBanner(reminderId) {
+                const banner = document.querySelector(`.reminder-banner[data-id="${reminderId}"]`);
+                if (banner) {
+                    banner.remove();
+                }
+                removeActiveReminder(reminderId);
+            }
+            
+            // Remove from active reminders
+            function removeActiveReminder(reminderId) {
+                app.activeReminders = app.activeReminders.filter(id => id !== reminderId);
+                
+                // Clear any snooze timers
+                if (app.snoozeTimers[reminderId]) {
+                    clearTimeout(app.snoozeTimers[reminderId]);
+                    delete app.snoozeTimers[reminderId];
+                }
+            }
+            
+            // Snooze reminder
+            function snoozeReminder(reminderId, minutes = 10) {
+                // Clear any existing snooze timer
+                if (app.snoozeTimers[reminderId]) {
+                    clearTimeout(app.snoozeTimers[reminderId]);
+                }
+                
+                // Set snooze timer
+                app.snoozeTimers[reminderId] = setTimeout(() => {
+                    // Get reminder and medication
+                    const reminder = app.reminders.find(r => r.id === reminderId);
+                    if (reminder && !reminder.taken && !reminder.skipped) {
+                        const medication = getMedicationById(reminder.medicationId);
+                        if (medication) {
+                            showReminderNotification(reminder, medication);
+                        }
+                    }
+                }, minutes * 60 * 1000);
+                
+                // Show toast with translated message
+                const message = translations[app.language].reminder_snoozed.replace('{minutes}', minutes);
+                showToast(message, 'info');
+            }
+            
+            // Notify user (sound or vibration)
+            function notifyUser() {
+                // Try vibration if available
+                if ('vibrate' in navigator) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+                
+                // Try to play a sound
+                try {
+                    const sound = new Audio('https://cdn.jsdelivr.net/gh/JustinCally/justincally.github.io/notification1.mp3');
+                    sound.play();
+                } catch (e) {
+                    console.log('Audio notification not supported');
+                }
+            }
+            
+            // Format time helper
+            function formatTime(dateObj) {
+                // Format based on language
+                if (app.language === 'fr') {
+                    // Use 24-hour time format for French
+                    return dateObj.toLocaleTimeString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } else {
+                    // Use 12-hour time format for English
+                    return dateObj.toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                }
+            }
+            
+            // Toast notification function
+            function showToast(message, type = 'info', duration = 3000) {
+                let toastContainer = document.querySelector('.toast-container');
+                
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container';
+                    document.body.appendChild(toastContainer);
+                }
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let iconClass = 'fa-info-circle';
+                if (type === 'success') iconClass = 'fa-check-circle';
+                if (type === 'error') iconClass = 'fa-exclamation-circle';
+                if (type === 'warning') iconClass = 'fa-exclamation-triangle';
+                
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="toast-message">${message}</div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    toast.classList.add('toast-visible');
+                }, 10);
+                
+                // Remove after duration
+                setTimeout(() => {
+                    toast.classList.remove('toast-visible');
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, duration);
+            }
+        });
+    </script>
+</body>
+</html>
